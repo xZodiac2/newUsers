@@ -1,7 +1,9 @@
 package com.ilya.usersupgrade
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ContextMenu
 import android.view.View
 import com.ilya.usersupgrade.databinding.ActivityUserGreetingBinding
 
@@ -32,7 +34,7 @@ class UserGreetingActivity : AppCompatActivity() {
     }
 
     private fun mapUserNameToUI() {
-        activityUserGreetingViews.tvGreeting.text = "${} $nameOfSignedUser"
+        activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} $nameOfSignedUser"
     }
 
     private fun mapError(error: String) {
