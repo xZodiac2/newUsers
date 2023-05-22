@@ -28,11 +28,11 @@ class UserGreetingActivity : AppCompatActivity() {
             }
         }
 
-        activityUserGreetingViews.btnUnlogin.setOnClickListener(this::unlogin)
+        activityUserGreetingViews.btnUnlogin.setOnClickListener(this::logout)
     }
 
     private fun mapUserNameToUI() {
-        activityUserGreetingViews.tvGreeting.text = "${activityUserGreetingViews.tvGreeting.text} $nameOfSignedUser"
+        activityUserGreetingViews.tvGreeting.text = "${} $nameOfSignedUser"
     }
 
     private fun mapError(error: String) {
@@ -50,7 +50,7 @@ class UserGreetingActivity : AppCompatActivity() {
     }
 
 
-    private fun unlogin(view: View) {
+    private fun logout(view: View) {
         finish()
     }
 
