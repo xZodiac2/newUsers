@@ -7,17 +7,17 @@ import com.ilya.usersupgrade.databinding.ActivityUserGreetingBinding
 
 class UserGreetingActivity : AppCompatActivity() {
 
-    private lateinit var activityUserGreeting: ActivityUserGreetingBinding
+    private lateinit var activityUserGreetingViews: ActivityUserGreetingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityUserGreeting = ActivityUserGreetingBinding.inflate(layoutInflater)
-        setContentView(activityUserGreeting.root)
+        activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
+        setContentView(activityUserGreetingViews.root)
 
         val userName = intent.getStringExtra("userName")
-        activityUserGreeting.tvGreeting.text = "${activityUserGreeting.tvGreeting.text} $userName"
+        activityUserGreetingViews.tvGreeting.text = "${activityUserGreetingViews.tvGreeting.text} $userName"
 
-        activityUserGreeting.btnUnlogin.setOnClickListener(this::unlogin)
+        activityUserGreetingViews.btnUnlogin.setOnClickListener(this::unlogin)
     }
 
     private fun unlogin(view: View) {
