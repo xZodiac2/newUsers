@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name" translatable="false">usersUpgrade</string>
+    <string name="text_login_input">Enter login</string>
+    <string name="text_password_input">Enter password</string>
+    <string name="text_login_button">Login</string>
+    <string name="text_error_invalid_input">Invalid login or password</string>
+    <string name="text_greeting">Hello, </string>
+    <string name="btn_unlogin">Unlogin</string>
+</resources>
