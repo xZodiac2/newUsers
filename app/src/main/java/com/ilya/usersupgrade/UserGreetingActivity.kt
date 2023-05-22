@@ -22,10 +22,17 @@ class UserGreetingActivity : AppCompatActivity() {
                 toUIWithError()
                 mapError(Error.UserNameIsUndefined.message)
             }
-            else -> activityUserGreetingViews.tvGreeting.text = "${activityUserGreetingViews.tvGreeting.text} $nameOfSignedUser"
+            else -> {
+                toDefaultUI()
+                mapUserNameToUI()
+            }
         }
 
         activityUserGreetingViews.btnUnlogin.setOnClickListener(this::unlogin)
+    }
+
+    private fun mapUserNameToUI() {
+        activityUserGreetingViews.tvGreeting.text = "${activityUserGreetingViews.tvGreeting.text} $nameOfSignedUser"
     }
 
     private fun mapError(error: String) {
