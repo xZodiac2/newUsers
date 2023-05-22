@@ -7,22 +7,36 @@
     tools:context=".UserGreetingActivity">
 
     <TextView
+        android:id="@+id/tv_error_user_is_null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:textSize="25dp"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        android:text="@string/text_error_user_is_undefined"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <TextView
         android:id="@+id/tv_greeting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:textSize="25dp"
         android:text="@string/text_greeting"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_error_user_is_null"
+        app:layout_constraintStart_toStartOf="@id/tv_error_user_is_null"
+        app:layout_constraintEnd_toEndOf="@id/tv_error_user_is_null" />
 
     <Button
         android:id="@+id/btn_unlogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="@string/btn_unlogin"
+        android:text="@string/text_unlogin"
         app:layout_constraintStart_toStartOf="@id/tv_greeting"
         app:layout_constraintEnd_toEndOf="@id/tv_greeting"
         app:layout_constraintTop_toBottomOf="@id/tv_greeting"/>
