@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun mapError(errorText: String?) {
         activityMainViews.tvError.text = errorText
-
     }
 
     private fun clearInputFields() {
