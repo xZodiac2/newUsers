@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         authenticate()
             .onSuccess { user -> giveAccess(user.name) }
             .onFailure { error ->
+                activityMainViews.tvError.visibility = View.VISIBLE
                 mapError(error.message)
                 clearInputFields()
             }
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun mapError(errorText: String?) {
         activityMainViews.tvError.text = errorText
-        activityMainViews.tvError.visibility = View.VISIBLE
+
     }
 
     private fun clearInputFields() {
