@@ -14,7 +14,7 @@
         android:textSize="25dp"
         android:textColor="@color/red"
         android:visibility="gone"
-        android:text="@string/text_error_user_is_undefined"
+        android:text="@string/text_error_user_is_null"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

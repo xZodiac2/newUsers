@@ -17,12 +17,12 @@ class UserGreetingActivity : AppCompatActivity() {
         activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
         setContentView(activityUserGreetingViews.root)
 
-        nameOfSignedUser = intent.getStringExtra("userName") ?: "undefined"
+        nameOfSignedUser = intent.getStringExtra("userName") ?: "null"
 
         when (nameOfSignedUser) {
-            "undefined" -> {
+            "null" -> {
                 toUIWithError()
-                mapError(Error.UserNameIsUndefined.message)
+                mapError(Error.UserNameIsNull.message)
             }
             else -> {
                 toDefaultUI()

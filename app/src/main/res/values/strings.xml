@@ -6,5 +6,5 @@
     <string name="text_error_invalid_input">Invalid login or password</string>
     <string name="text_greeting">Hello, </string>
     <string name="text_unlogin">Unlogin</string>
-    <string name="text_error_user_is_undefined">Invalid meaning of userName property: null</string>
+    <string name="text_error_user_is_null">Invalid meaning of userName property: null</string>
 </resources>
