@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
 
         clearInputFields()
         activityMainViews.tvError.visibility = View.GONE
-
     }
 
 }

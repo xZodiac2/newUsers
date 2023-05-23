@@ -10,17 +10,18 @@ import com.ilya.usersupgrade.databinding.ActivityUserGreetingBinding
 class UserGreetingActivity : AppCompatActivity() {
 
     private lateinit var activityUserGreetingViews: ActivityUserGreetingBinding
-    private lateinit var nameOfSignedUser: String
+
+    private var nameOfSignedUser: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
         setContentView(activityUserGreetingViews.root)
 
-        nameOfSignedUser = intent.getStringExtra("userName") ?: "null"
+        nameOfSignedUser = intent.getStringExtra("userName")
 
         when (nameOfSignedUser) {
-            "null" -> {
+            null -> {
                 toUIWithError()
                 mapError(Error.UserNameIsNull.message)
             }
