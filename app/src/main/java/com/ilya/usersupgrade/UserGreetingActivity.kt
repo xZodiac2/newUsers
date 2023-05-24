@@ -11,21 +11,23 @@ class UserGreetingActivity : AppCompatActivity() {
 
     private lateinit var activityUserGreetingViews: ActivityUserGreetingBinding
 
-    private var nameOfSignedUser: String? = null
-
+    private var signedUserDataArray: Array<String>? = null
+    private lateinit var signedUser: User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
         setContentView(activityUserGreetingViews.root)
 
-        nameOfSignedUser = intent.getStringExtra("userName")
+        signedUserDataArray = intent.getStringArrayExtra("userData")
 
-        when (nameOfSignedUser) {
+        when (signedUserDataArray) {
             null -> {
                 toUIWithError()
                 mapError(Error.UserNameIsNull.message)
             }
             else -> {
+                val (userLoginValue, userPasswordValue) = signedUserDataArray!! // signedUserDataArray never be null here
+                signedUser = users.find { userData -> userData.login == userLoginValue && userData.password == userPasswordValue }!! // here .find method always will return some user
                 toDefaultUI()
                 mapUserNameToUI()
             }
@@ -35,7 +37,7 @@ class UserGreetingActivity : AppCompatActivity() {
     }
 
     private fun mapUserNameToUI() {
-        activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} $nameOfSignedUser"
+        activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${signedUser.name}"
     }
 
     private fun mapError(error: String) {

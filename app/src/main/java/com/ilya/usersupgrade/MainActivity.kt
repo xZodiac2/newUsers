@@ -11,12 +11,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var activityMainViews: ActivityMainBinding
 
-    private val users = mutableListOf(
-        User("tomat228", "123", "Ilya"),
-        User("Zodiac", "bombom", "Sergey"),
-        User("bobik", "kotbegemot", "Andrey")
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
@@ -27,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun login(view: View) {
         authenticate()
-            .onSuccess { user -> giveAccess(user.name) }
+            .onSuccess { user -> giveAccess(user) }
             .onFailure { error ->
                 activityMainViews.tvError.visibility = View.VISIBLE
                 mapError(error.message)
@@ -49,9 +43,9 @@ class MainActivity : AppCompatActivity() {
         return users.find { user ->  user.login == login && user.password == password}
     }
 
-    private fun giveAccess(userName: String) {
+    private fun giveAccess(userData: User) {
         val intent = Intent(this, UserGreetingActivity::class.java)
-        intent.putExtra("userName", userName)
+        intent.putExtra("userData", arrayOf(userData.login, userData.password))
         startActivity(intent)
     }
 
