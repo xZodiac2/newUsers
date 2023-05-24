@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.View
 import com.ilya.usersupgrade.databinding.ActivityMainBinding
 
@@ -15,8 +16,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainViews.root)
-
-        activityMainViews.btnLogin.setOnClickListener(this::login)
     }
 
     private fun login(view: View) {
