@@ -1,9 +1,7 @@
 package com.ilya.usersupgrade
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ContextMenu
 import android.view.View
 import com.ilya.usersupgrade.databinding.ActivityUserGreetingBinding
 
@@ -24,7 +22,7 @@ class UserGreetingActivity : AppCompatActivity() {
         if (signedUserDataArray[0] == "null" && signedUserDataArray.size == 1) {
             toUIWithError()
             mapError(Error.UserIsNull.message)
-        } else  {
+        } else {
             val (userLoginValue, userPasswordValue) = signedUserDataArray
             signedUser = users.find { userData -> userData.login == userLoginValue && userData.password == userPasswordValue }
             toDefaultUI()
@@ -36,6 +34,8 @@ class UserGreetingActivity : AppCompatActivity() {
     }
 
     private fun mapUserDataToUI() {
+        if (signedUser == null) return mapError(Error.UserIsNull.message)
+
         activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${signedUser?.name}"
     }
 
