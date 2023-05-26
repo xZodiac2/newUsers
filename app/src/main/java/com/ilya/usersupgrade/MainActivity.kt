@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainViews.root)
+
+        activityMainViews.btnLogin.setOnClickListener(this::login)
     }
 
     private fun login(view: View) {
