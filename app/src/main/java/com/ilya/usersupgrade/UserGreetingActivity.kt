@@ -11,33 +11,32 @@ class UserGreetingActivity : AppCompatActivity() {
 
     private lateinit var activityUserGreetingViews: ActivityUserGreetingBinding
 
-    private var signedUserDataArray: Array<String>? = null
-    private lateinit var signedUser: User
+    private lateinit var signedUserDataArray: Array<String>
+    private var signedUser: User? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
         setContentView(activityUserGreetingViews.root)
 
-        signedUserDataArray = intent.getStringArrayExtra("userData")
+        signedUserDataArray = intent.getStringArrayExtra("userData") ?: arrayOf("null")
 
-        when (signedUserDataArray) {
-            null -> {
-                toUIWithError()
-                mapError(Error.UserNameIsNull.message)
-            }
-            else -> {
-                val (userLoginValue, userPasswordValue) = signedUserDataArray!! // signedUserDataArray never be null here
-                signedUser = users.find { userData -> userData.login == userLoginValue && userData.password == userPasswordValue }!! // here .find method always will return some user
-                toDefaultUI()
-                mapUserNameToUI()
-            }
+        if (signedUserDataArray[0] == "null" && signedUserDataArray.size == 1) {
+            toUIWithError()
+            mapError(Error.UserIsNull.message)
+        } else  {
+            val (userLoginValue, userPasswordValue) = signedUserDataArray
+            signedUser = users.find { userData -> userData.login == userLoginValue && userData.password == userPasswordValue }
+            toDefaultUI()
+            mapUserDataToUI()
         }
+
 
         activityUserGreetingViews.btnUnlogin.setOnClickListener(this::logout)
     }
 
-    private fun mapUserNameToUI() {
-        activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${signedUser.name}"
+    private fun mapUserDataToUI() {
+        activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${signedUser?.name}"
     }
 
     private fun mapError(error: String) {
@@ -50,6 +49,8 @@ class UserGreetingActivity : AppCompatActivity() {
     }
 
     private fun toDefaultUI() {
+        if (signedUser == null) return mapError(Error.UserIsNull.message)
+
         activityUserGreetingViews.tvGreeting.show()
         activityUserGreetingViews.tvErrorUserIsNull.hide()
     }
