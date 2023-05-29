@@ -34,11 +34,7 @@ class UserGreetingActivity : AppCompatActivity() {
     }
 
     private fun mapUserNameToUI() {
-        if (signedUser == null) {
-            toUiWithError()
-            mapErrorToUI(Error.UserIsNull.message)
-            return
-        }
+        if (signedUser == null) return toUiWithError()
 
         activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${signedUser.name}"
     }
