@@ -1,5 +1,6 @@
 package com.ilya.usersupgrade
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,53 +9,67 @@ import com.ilya.usersupgrade.databinding.ActivityUserGreetingBinding
 class UserGreetingActivity : AppCompatActivity() {
 
     private lateinit var activityUserGreetingViews: ActivityUserGreetingBinding
-
-    private lateinit var signedUserDataArray: Array<String>
-    private var signedUser: User? = null
+    private val signedUser = users.find { userData -> userData.haveAccess}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
         setContentView(activityUserGreetingViews.root)
 
-        signedUserDataArray = intent.getStringArrayExtra("userData") ?: arrayOf("null")
-
-        if (signedUserDataArray[0] == "null" && signedUserDataArray.size == 1) {
-            toUIWithError()
-            mapError(Error.UserIsNull.message)
-        } else {
-            val (userLoginValue, userPasswordValue) = signedUserDataArray
-            signedUser = users.find { userData -> userData.login == userLoginValue && userData.password == userPasswordValue }
-            toDefaultUI()
-            mapUserDataToUI()
+        when (signedUser) {
+            null -> toUiWithError()
+            else -> toUserGreetingUI()
         }
 
-
         activityUserGreetingViews.btnUnlogin.setOnClickListener(this::logout)
+
     }
 
-    private fun mapUserDataToUI() {
-        if (signedUser == null) return mapError(Error.UserIsNull.message)
-
-        activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${signedUser?.name}"
+    private fun mapErrorToUI(errorMessage: String) {
+        activityUserGreetingViews.tvErrorUserIsNull.text = errorMessage
     }
 
-    private fun mapError(error: String) {
-        activityUserGreetingViews.tvErrorUserIsNull.text = error
+    private fun removeErrorFromUI() {
+        activityUserGreetingViews.tvErrorUserIsNull.text = ""
     }
 
-    private fun toUIWithError() {
-        activityUserGreetingViews.tvErrorUserIsNull.show()
-        activityUserGreetingViews.tvGreeting.hide()
+    private fun mapUserNameToUI() {
+        if (signedUser == null) {
+            toUiWithError()
+            mapErrorToUI(Error.UserIsNull.message)
+            return
+        }
+
+        activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${signedUser.name}"
     }
 
-    private fun toDefaultUI() {
-        if (signedUser == null) return mapError(Error.UserIsNull.message)
-
-        activityUserGreetingViews.tvGreeting.show()
-        activityUserGreetingViews.tvErrorUserIsNull.hide()
+    private fun removeUserNameFromUI() {
+        activityUserGreetingViews.tvGreeting.text = getString(R.string.text_greeting)
     }
 
+    private fun toUiWithError() = with(activityUserGreetingViews) {
+        tvGreeting.hide()
+        removeUserNameFromUI()
+
+        tvErrorUserIsNull.show()
+        mapErrorToUI(Error.UserIsNull.message)
+    }
+
+    private fun toUserGreetingUI() = with(activityUserGreetingViews) {
+        tvGreeting.show()
+        mapUserNameToUI()
+
+        tvErrorUserIsNull.hide()
+        removeErrorFromUI()
+    }
+
+    private fun toDefaultUI() = with(activityUserGreetingViews) {
+        tvErrorUserIsNull.hide()
+        removeErrorFromUI()
+
+        tvGreeting.show()
+        removeUserNameFromUI()
+    }
 
     private fun logout(view: View) {
         finish()

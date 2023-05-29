@@ -1,7 +1,9 @@
 package com.ilya.usersupgrade
 
-data class User(
+class User(
     val login: String,
     val password: String,
     val name: String
-)
+) {
+    var haveAccess = false
+}

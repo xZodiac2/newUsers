@@ -44,9 +44,10 @@ class MainActivity : AppCompatActivity() {
         return users.find { user ->  user.login == login && user.password == password}
     }
 
-    private fun giveAccess(userData: User) {
+    private fun giveAccess(user: User) {
+        user.haveAccess = true
+
         val intent = Intent(this, UserGreetingActivity::class.java)
-        intent.putExtra("userData", arrayOf(userData.login, userData.password))
         startActivity(intent)
     }
 
