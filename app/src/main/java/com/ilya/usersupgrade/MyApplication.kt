@@ -2,7 +2,7 @@ package com.ilya.usersupgrade
 
 import android.app.Application
 
-class UsersRepository : Application() {
+class MyApplication : Application() {
     
     val users = mutableListOf(
         User("tomat228", "123", "Ilya", 0),

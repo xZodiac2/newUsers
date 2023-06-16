@@ -11,14 +11,14 @@ import com.ilya.usersupgrade.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var activityMainViews: ActivityMainBinding
-    private lateinit var usersRepository: UsersRepository
+    private lateinit var usersRepository: MyApplication
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainViews.root)
         
-        usersRepository = applicationContext as UsersRepository
+        usersRepository = applicationContext as MyApplication
         activityMainViews.btnLogin.setOnClickListener(this::login)
     }
 
