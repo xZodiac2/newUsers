@@ -11,12 +11,14 @@ import com.ilya.usersupgrade.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var activityMainViews: ActivityMainBinding
-
+    private lateinit var usersRepository: UsersRepository
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainViews.root)
-
+        
+        usersRepository = applicationContext as UsersRepository
         activityMainViews.btnLogin.setOnClickListener(this::login)
     }
 
@@ -34,20 +36,15 @@ class MainActivity : AppCompatActivity() {
         val userLoginValue = activityMainViews.edLoginInput.text.toString()
         val userPasswordValue = activityMainViews.edPasswordInput.text.toString()
 
-        return when (val foundUser = findUser(userLoginValue, userPasswordValue)) {
+        return when (val foundUser = usersRepository.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
             null -> Result.failure(Error.InvalidInputError)
             else -> Result.success(foundUser)
         }
     }
 
-    private fun findUser(login: String, password: String): User? {
-        return users.find { user ->  user.login == login && user.password == password}
-    }
-
     private fun giveAccess(user: User) {
-        user.haveAccess = true
-
         val intent = Intent(this, UserGreetingActivity::class.java)
+        intent.putExtra("user id", user.id)
         startActivity(intent)
     }
 
