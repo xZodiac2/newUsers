@@ -20,9 +20,7 @@ class UserGreetingActivity : AppCompatActivity() {
     
         when (val user = usersRepository.findUserById(intent?.getIntExtra("user id", -1))) {
             null -> finish()
-            else -> {
-                activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${user.name}"
-            }
+            else -> activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${user.name}"
         }
 
         activityUserGreetingViews.btnUnlogin.setOnClickListener(this::logout)
