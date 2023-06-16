@@ -57,11 +57,4 @@ class MainActivity : AppCompatActivity() {
         activityMainViews.edPasswordInput.setText("")
     }
 
-    override fun onRestart() {
-        super.onRestart()
-
-        clearInputFields()
-        activityMainViews.tvError.visibility = View.GONE
-    }
-
 }
