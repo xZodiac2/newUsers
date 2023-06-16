@@ -1,6 +1,6 @@
 package com.ilya.usersupgrade
 
-class User(
+data class User(
     val login: String,
     val password: String,
     val name: String,
