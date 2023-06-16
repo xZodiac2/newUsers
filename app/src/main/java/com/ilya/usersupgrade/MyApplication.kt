@@ -4,7 +4,7 @@ import android.app.Application
 
 class MyApplication : Application() {
     
-    val users = mutableListOf(
+    private val users = mutableListOf(
         User("tomat228", "123", "Ilya", 0),
         User("Zodiac", "bombom", "Sergey", 1),
         User("bobik", "kotbegemot", "Andrey", 2)
