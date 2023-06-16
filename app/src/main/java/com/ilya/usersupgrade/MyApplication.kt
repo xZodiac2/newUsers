@@ -24,8 +24,8 @@ class MyApplication : Application() {
         users.remove(deletingUser)
     }
     
-    fun addNewUser(login: String, password: String, name: String) {
-        users += User(login, password, name, users[users.size - 1].id + 1)
+    fun addNewUser(user: User) {
+        users += user
     }
     
 }
