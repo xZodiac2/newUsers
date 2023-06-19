@@ -36,11 +36,11 @@ class RegistrationActivity : AppCompatActivity() {
         
         myApplication.addNewUser(user)
         
-        buildAlertDialog()
+        showAlertDialog()
         
     }
     
-    private fun buildAlertDialog() {
+    private fun showAlertDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.text_registration_successfully))
         builder.setMessage(getString(R.string.text_registration_successfully_user_adding))
