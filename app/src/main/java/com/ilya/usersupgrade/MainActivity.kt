@@ -13,14 +13,14 @@ class MainActivity : AppCompatActivity() {
     }
     
     private lateinit var activityMainViews: ActivityMainBinding
-    private lateinit var usersRepository: MyApplication
+    private lateinit var myApplication: MyApplication
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainViews.root)
     
-        usersRepository = applicationContext as MyApplication
+        myApplication = applicationContext as MyApplication
     
         activityMainViews.btnLogin.setOnClickListener(this::login)
         activityMainViews.btnRegister.setOnClickListener { startActivity(Intent(this, RegistrationActivity::class.java)) }
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         val userLoginValue = activityMainViews.edLoginInput.text.toString()
         val userPasswordValue = activityMainViews.edPasswordInput.text.toString()
 
-        return when (val foundUser = usersRepository.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
+        return when (val foundUser = myApplication.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
             null -> Result.failure(Error.InvalidInputError)
             else -> Result.success(foundUser)
         }

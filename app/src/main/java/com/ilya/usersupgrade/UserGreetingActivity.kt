@@ -11,15 +11,15 @@ class UserGreetingActivity : AppCompatActivity() {
         private const val KEY_FOR_GETTING_USER_ID = "userid"
     }
     
-    private lateinit var usersRepository: MyApplication
+    private lateinit var myApplication: MyApplication
     private lateinit var activityUserGreetingViews: ActivityUserGreetingBinding
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
         setContentView(activityUserGreetingViews.root)
-        
-        usersRepository = applicationContext as MyApplication
+    
+        myApplication = applicationContext as MyApplication
         
         val userId = intent?.getIntExtra(KEY_FOR_GETTING_USER_ID, -1)
         
@@ -27,7 +27,7 @@ class UserGreetingActivity : AppCompatActivity() {
             finish()
         }
         
-        when (val user = usersRepository.findUserById(userId)) {
+        when (val user = myApplication.findUserById(userId)) {
             null -> finish()
             else -> activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${user.name}"
         }
