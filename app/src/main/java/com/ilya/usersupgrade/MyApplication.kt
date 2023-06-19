@@ -5,13 +5,13 @@ import android.app.Application
 class MyApplication : Application() {
     
     private val users = mutableListOf(
-        User("tomat228", "123", "Ilya", 0),
-        User("Zodiac", "bombom", "Sergey", 1),
-        User("bobik", "kotbegemot", "Andrey", 2)
+        User("Ilya", "tomat228", "123"),
+        User("SSergey", "Zodiac", "bombom"),
+        User("Andrey", "bobik", "kotbegemot")
     )
     
     fun findUserById(id: Int?) : User? {
-        return users.find {it.id == id}
+        return users.find {it.userId == id}
     }
     
     fun findUserByLoginAndPassword(login: String, password: String): User? {
@@ -19,7 +19,7 @@ class MyApplication : Application() {
     }
     
     fun deleteUserById(id: Int) {
-        val deletingUser = users.find {it.id == id}
+        val deletingUser = users.find {it.userId == id}
         
         users.remove(deletingUser)
     }

@@ -7,4 +7,14 @@
     <string name="text_greeting">Hello, </string>
     <string name="text_unlogin">Logout</string>
     <string name="text_error_user_is_null">Invalid meaning of userName property: null</string>
+    <string name="text_registration_title">Registration</string>
+    <string name="text_registration_hint_username">Enter your name</string>
+    <string name="text_registration_hint_login">Enter your login</string>
+    <string name="text_registration_hint_password">Enter the password</string>
+    <string name="text_registration_button">Register</string>
+    <string name="text_registration_successfully_user_adding">User successfully added</string>
+    <string name="text_registration_exit">Back</string>
+    <string name="text_registration_successfully">Successfully!</string>
+    <string name="text_registration_button_ok" translatable="false">Ok</string>
+    <string name="text_offer_to_registration">Have not account? Register</string>
 </resources>

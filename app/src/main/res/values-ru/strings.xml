@@ -6,4 +6,13 @@
     <string name="text_greeting">Здравтсвуйте, </string>
     <string name="text_unlogin">Выйти</string>
     <string name="text_error_user_is_null">Недопустимое значение свойства userName: null</string>
+    <string name="text_registration_title">Регистрация</string>
+    <string name="text_registration_hint_username">Введие ваше имя</string>
+    <string name="text_registration_hint_login">Введите ваш логин</string>
+    <string name="text_registration_hint_password">Введите пароль</string>
+    <string name="text_registration_button">Зарегестрироваться</string>
+    <string name="text_registration_successfully_user_adding">Пользователь успешно добавлен</string>
+    <string name="text_registration_exit">Назад</string>
+    <string name="text_registration_successfully">Успешно!</string>
+    <string name="text_offer_to_registration">У вас нет аккаунта? Зарегестрироваться</string>
 </resources>

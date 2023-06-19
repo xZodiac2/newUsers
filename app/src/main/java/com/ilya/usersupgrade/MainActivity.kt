@@ -3,13 +3,15 @@ package com.ilya.usersupgrade
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.View
 import com.ilya.usersupgrade.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
+    
+    companion object {
+        private const val KEY_FOR_SENDING_USER_ID = "userid"
+    }
+    
     private lateinit var activityMainViews: ActivityMainBinding
     private lateinit var usersRepository: MyApplication
     
@@ -17,9 +19,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainViews.root)
-        
+    
         usersRepository = applicationContext as MyApplication
+    
         activityMainViews.btnLogin.setOnClickListener(this::login)
+        activityMainViews.btnRegister.setOnClickListener { startActivity(Intent(this, RegistrationActivity::class.java)) }
     }
 
     private fun login(view: View) {
@@ -44,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun giveAccess(user: User) {
         val intent = Intent(this, UserGreetingActivity::class.java)
-        intent.putExtra("user id", user.id)
+        intent.putExtra(KEY_FOR_SENDING_USER_ID, user.userId)
         startActivity(intent)
     }
 
