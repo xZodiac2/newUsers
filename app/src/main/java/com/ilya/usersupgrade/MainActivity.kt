@@ -8,19 +8,15 @@ import com.ilya.usersupgrade.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     
-    companion object {
-        private const val KEY_FOR_SENDING_USER_ID = "userid"
-    }
-    
     private lateinit var activityMainViews: ActivityMainBinding
-    private lateinit var myApplication: MyApplication
+    private lateinit var application: UsersApplication
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainViews = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainViews.root)
     
-        myApplication = applicationContext as MyApplication
+        application = applicationContext as UsersApplication
     
         activityMainViews.btnLogin.setOnClickListener(this::login)
         activityMainViews.btnRegister.setOnClickListener { startActivity(Intent(this, RegistrationActivity::class.java)) }
@@ -31,16 +27,16 @@ class MainActivity : AppCompatActivity() {
             .onSuccess { user -> giveAccess(user) }
             .onFailure { error ->
                 activityMainViews.tvError.visibility = View.VISIBLE
-                mapError(error.message)
+                activityMainViews.tvError.text = (error as Error).extract(this)
                 clearInputFields()
             }
     }
 
-    private fun authenticate(): Result<User> {
-        val userLoginValue = activityMainViews.edLoginInput.text.toString()
-        val userPasswordValue = activityMainViews.edPasswordInput.text.toString()
+    private fun authenticate(): Result<User> = with(activityMainViews) {
+        val userLoginValue = etLoginInput.text.toString()
+        val userPasswordValue = etPasswordInput.text.toString()
 
-        return when (val foundUser = myApplication.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
+        return when (val foundUser = application.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
             null -> Result.failure(Error.InvalidInputError)
             else -> Result.success(foundUser)
         }
@@ -48,17 +44,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun giveAccess(user: User) {
         val intent = Intent(this, UserGreetingActivity::class.java)
-        intent.putExtra(KEY_FOR_SENDING_USER_ID, user.userId)
+        intent.putExtra("userid", user.userId)
         startActivity(intent)
     }
 
-    private fun mapError(errorText: String?) {
-        activityMainViews.tvError.text = errorText
+    private fun clearInputFields() = with(activityMainViews) {
+        etLoginInput.setText("")
+        etPasswordInput.setText("")
     }
-
-    private fun clearInputFields() {
-        activityMainViews.edLoginInput.setText("")
-        activityMainViews.edPasswordInput.setText("")
-    }
-
+    
 }

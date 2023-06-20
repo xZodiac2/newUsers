@@ -3,17 +3,18 @@ package com.ilya.usersupgrade
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.ilya.usersupgrade.databinding.ActivityRegistrationBinding
 
 class RegistrationActivity : AppCompatActivity() {
     
     private lateinit var views: ActivityRegistrationBinding
-    private lateinit var myApplication: MyApplication
+    private lateinit var application: UsersApplication
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myApplication = applicationContext as MyApplication
+        application = applicationContext as UsersApplication
         views = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(views.root)
         
@@ -21,31 +22,33 @@ class RegistrationActivity : AppCompatActivity() {
         
     }
     
-    private fun registration(view: View) {
-        var userName: String
-        var userLogin: String
-        var userPassword: String
+    private fun onPasswordsError() = with(views) {
+        tvErrorPasswords.visibility = View.VISIBLE
+        tvErrorPasswords.text = Error.PasswordsDoNotMatchError.extract(this@RegistrationActivity)
         
-        views.apply {
-            userName = edUsername.text.toString()
-            userLogin = edLogin.text.toString()
-            userPassword = edLogin.text.toString()
+        etPassword.setText("")
+        etRepeatedPassword.setText("")
+    }
+    
+    private fun registration(view: View) = with(views) {
+        val userName = etUsername.text.toString()
+        val userLogin = etLogin.text.toString()
+        val userPassword = etPassword.text.toString()
+        val userPasswordRepeated = etRepeatedPassword.text.toString()
+        
+        if (userPassword != userPasswordRepeated) {
+            onPasswordsError()
+            return
         }
         
         val user = User(userName, userLogin, userPassword)
-        
-        myApplication.addNewUser(user)
-        
-        showAlertDialog()
-        
-    }
     
-    private fun showAlertDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.text_registration_successfully))
-        builder.setMessage(getString(R.string.text_registration_successfully_user_adding))
-        builder.setPositiveButton(getString(R.string.text_registration_button_ok)) { _, _ -> finish() }
-        builder.show()
+        application.addNewUser(user)
+        
+        Toast.makeText(this@RegistrationActivity, getString(R.string.text_registration_successfully_user_adding), Toast.LENGTH_SHORT).show()
+        
+        finish()
+        
     }
     
 }
