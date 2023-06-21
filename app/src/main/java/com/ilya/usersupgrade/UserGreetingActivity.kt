@@ -7,7 +7,7 @@ import com.ilya.usersupgrade.databinding.ActivityUserGreetingBinding
 
 class UserGreetingActivity : AppCompatActivity() {
     
-    private lateinit var application: UsersApplication
+    private lateinit var usersRepository: UsersRepository
     private lateinit var activityUserGreetingViews: ActivityUserGreetingBinding
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +15,7 @@ class UserGreetingActivity : AppCompatActivity() {
         activityUserGreetingViews = ActivityUserGreetingBinding.inflate(layoutInflater)
         setContentView(activityUserGreetingViews.root)
     
-        application = applicationContext as UsersApplication
+        usersRepository = (applicationContext as UsersApplication).usersRepository
         
         val userId = intent.getIntExtra(KEY_USER_ID, USER_NOT_FOUND_ID)
         
@@ -23,7 +23,7 @@ class UserGreetingActivity : AppCompatActivity() {
             finish()
         }
         
-        when (val user = application.usersRepository.findUserById(userId)) {
+        when (val user = usersRepository.findUserById(userId)) {
             null -> finish()
             else -> activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${user.name}"
         }
