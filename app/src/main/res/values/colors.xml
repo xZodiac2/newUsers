@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#f50707</color>
+    <color name="green">#16c946</color>
+    <color name="blue">#1073de</color>
 </resources>

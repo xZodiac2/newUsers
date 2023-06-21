@@ -1,8 +1,6 @@
 package com.ilya.usersupgrade
 
-sealed class Error (
-    override val message: String
-) : Throwable(message) {
-    object InvalidInputError : Error("Invalid login or password")
-    object UserIsNull : Error("Invalid meaning of user property: null")
+
+sealed class Error(val stringId: Int) : Throwable() {
+    object InvalidInputError : Error(R.string.text_error_invalid_input)
 }

@@ -5,5 +5,4 @@
     <string name="text_error_invalid_input">Неправильный логин или пароль</string>
     <string name="text_greeting">Здравтсвуйте, </string>
     <string name="text_unlogin">Выйти</string>
-    <string name="text_error_user_is_null">Недопустимое значение свойства userName: null</string>
 </resources>
