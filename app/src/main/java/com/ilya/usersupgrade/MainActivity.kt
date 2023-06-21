@@ -18,7 +18,11 @@ class MainActivity : AppCompatActivity() {
     
         usersRepository = (applicationContext as UsersApplication).usersRepository
     
-        activityMainViews.btnLogin.setOnClickListener(this::login)
+        activityMainViews.apply {
+            btnLogin.setOnClickListener(this@MainActivity::login)
+            btnOffer.setOnClickListener { startActivity(Intent(this@MainActivity, RegistrationActivity::class.java)) }
+        }
+        
     }
 
     private fun login(view: View) {

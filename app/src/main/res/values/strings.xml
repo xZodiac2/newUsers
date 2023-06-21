@@ -6,4 +6,11 @@
     <string name="text_error_invalid_input">Invalid login or password</string>
     <string name="text_greeting">Hello, </string>
     <string name="text_unlogin">Logout</string>
+    <string name="text_registration_title">Registration</string>
+    <string name="text_registration_hint_name_input">Input name</string>
+    <string name="text_registration_hint_login_input">Input login</string>
+    <string name="text_registration_hint_password_input">Input password</string>
+    <string name="text_registration_button_register">Register</string>
+    <string name="text_registration_user_added_successfully">You successfully registered!</string>
+    <string name="text_offer_to_register">Have not account? Register</string>
 </resources>
