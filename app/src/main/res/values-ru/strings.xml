@@ -5,14 +5,4 @@
     <string name="text_error_invalid_input">Неправильный логин или пароль</string>
     <string name="text_greeting">Здравтсвуйте, </string>
     <string name="text_unlogin">Выйти</string>
-    <string name="text_error_user_is_null">Недопустимое значение свойства userName: null</string>
-    <string name="text_registration_title">Регистрация</string>
-    <string name="text_registration_hint_username">Введие имя</string>
-    <string name="text_registration_hint_login">Введите логин</string>
-    <string name="text_registration_hint_password">Введите пароль</string>
-    <string name="text_registration_button">Зарегестрироваться</string>
-    <string name="text_registration_successfully_user_adding">Вы успешно зарегестрированны</string>
-    <string name="text_offer_to_registration">У вас нет аккаунта? Зарегестрироваться</string>
-    <string name="text_registration_hint_repeat_password">Повторите пароль</string>
-    <string name="text_error_passwords_do_not_match">Пароли не совпадают</string>
 </resources>

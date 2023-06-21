@@ -23,7 +23,7 @@ class UserGreetingActivity : AppCompatActivity() {
             finish()
         }
         
-        when (val user = application.findUserById(userId)) {
+        when (val user = application.usersRepository.findUserById(userId)) {
             null -> finish()
             else -> activityUserGreetingViews.tvGreeting.text = "${getString(R.string.text_greeting)} ${user.name}"
         }

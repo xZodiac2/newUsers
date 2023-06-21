@@ -6,14 +6,4 @@
     <string name="text_error_invalid_input">Invalid login or password</string>
     <string name="text_greeting">Hello, </string>
     <string name="text_unlogin">Logout</string>
-    <string name="text_error_user_is_null">Invalid meaning of userName property: null</string>
-    <string name="text_registration_title">Registration</string>
-    <string name="text_registration_hint_username">Enter name</string>
-    <string name="text_registration_hint_login">Enter login</string>
-    <string name="text_registration_hint_password">Enter the password</string>
-    <string name="text_registration_button">Register</string>
-    <string name="text_registration_successfully_user_adding">You successfully registered</string>
-    <string name="text_offer_to_registration">Have not account? Register</string>
-    <string name="text_registration_hint_repeat_password">Repeat the password</string>
-    <string name="text_error_passwords_do_not_match">Password don\'t match</string>
 </resources>
