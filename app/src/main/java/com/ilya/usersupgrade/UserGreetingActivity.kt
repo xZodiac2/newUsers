@@ -17,7 +17,7 @@ class UserGreetingActivity : AppCompatActivity() {
     
         application = applicationContext as UsersApplication
         
-        val userId = intent.getIntExtra(KEY_USER_ID, -1)
+        val userId = intent.getIntExtra(KEY_USER_ID, USER_NOT_FOUND_ID)
         
         if (userId == -1) {
             finish()
@@ -37,7 +37,8 @@ class UserGreetingActivity : AppCompatActivity() {
     }
     
     companion object {
-        private const val KEY_USER_ID = "userid"
+        private const val USER_NOT_FOUND_ID = -1
+        const val KEY_USER_ID = "userId"
     }
     
 }

@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun giveAccess(user: User) {
         val intent = Intent(this, UserGreetingActivity::class.java)
-        intent.putExtra("userid", user.userId)
+        intent.putExtra(UserGreetingActivity.KEY_USER_ID, user.userId)
         startActivity(intent)
     }
 
