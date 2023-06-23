@@ -12,4 +12,9 @@
     <string name="text_registration_button_register">Зарегестрироваться</string>
     <string name="text_registration_user_added_successfully">Вы успешно зарегестрированы!</string>
     <string name="text_offer_to_register">Нету аккаунта? Зарегестрироваться</string>
+    <string name="text_registration_hint_repeat_password">Повторите пароль</string>
+    <string name="text_registration_passwords_do_not_match_error">Пароли не совпадают</string>
+    <string name="text_registration_password_is_short">Необходимая длина пароля не менее 8 символов</string>
+    <string name="text_registration_input_length_error">Максимальная длина 25 символов</string>
+    <string name="text_registration_empty_field_error">Это поле не может быть пустым</string>
 </resources>

@@ -22,13 +22,13 @@
         android:id="@+id/et_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
+        android:hint="@string/text_registration_hint_name_input"
         android:inputType="text"
         android:minHeight="48dp"
-        android:hint="@string/text_registration_hint_name_input"
         app:layout_constraintEnd_toEndOf="@+id/tv_title"
-        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="@+id/tv_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
@@ -52,9 +52,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
+        android:hint="@string/text_registration_hint_password_input"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:hint="@string/text_registration_hint_password_input"
         app:layout_constraintEnd_toEndOf="@+id/et_login"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/et_login"
@@ -64,11 +64,55 @@
         android:id="@+id/btn_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="60dp"
         android:text="@string/text_registration_button_register"
+        app:layout_constraintEnd_toEndOf="@+id/et_repeated_password"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="@+id/et_repeated_password"
+        app:layout_constraintTop_toBottomOf="@+id/et_repeated_password" />
+
+    <EditText
+        android:id="@+id/et_repeated_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="@string/text_registration_hint_repeat_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="@+id/et_password"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/et_password"
         app:layout_constraintTop_toBottomOf="@+id/et_password" />
+
+    <TextView
+        android:id="@+id/tv_error_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/et_password"
+        app:layout_constraintEnd_toEndOf="@+id/et_password"
+        app:layout_constraintStart_toStartOf="@+id/et_password" />
+
+    <TextView
+        android:id="@+id/tv_name_length_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/et_name"
+        app:layout_constraintEnd_toEndOf="@+id/et_name"
+        app:layout_constraintStart_toStartOf="@+id/et_name" />
+
+    <TextView
+        android:id="@+id/tv_login_length_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/et_login"
+        app:layout_constraintEnd_toEndOf="@+id/et_login"
+        app:layout_constraintStart_toStartOf="@+id/et_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

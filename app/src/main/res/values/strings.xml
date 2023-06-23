@@ -13,4 +13,9 @@
     <string name="text_registration_button_register">Register</string>
     <string name="text_registration_user_added_successfully">You successfully registered!</string>
     <string name="text_offer_to_register">Have not account? Register</string>
+    <string name="text_registration_hint_repeat_password">Repeat password</string>
+    <string name="text_registration_passwords_do_not_match_error">Password do not match</string>
+    <string name="text_registration_password_is_short">Necessary password length is not smallest 8 characters</string>
+    <string name="text_registration_input_length_error">Max length is 25 characters</string>
+    <string name="text_registration_empty_field_error">This field is can not be empty</string>
 </resources>
