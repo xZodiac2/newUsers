@@ -20,9 +20,8 @@ class MainActivity : AppCompatActivity() {
     
         activityMainViews.apply {
             btnLogin.setOnClickListener(this@MainActivity::login)
-            btnOffer.setOnClickListener { startActivity(Intent(this@MainActivity, RegistrationActivity::class.java)) }
+            btnOfferToRegister.setOnClickListener { startActivity(Intent(this@MainActivity, RegistrationActivity::class.java)) }
         }
-        
     }
 
     private fun login(view: View) {
