@@ -66,12 +66,12 @@ class RegistrationActivity : AppCompatActivity() {
         
         if (userPassword.length < NECESSARY_PASSWORD_LENGTH) {
             changeErrorAvailability()
-            onPasswordError(passwordInputLayout, etPassword, Error.InputError.PasswordLengthError)
+            onInputError(passwordInputLayout, etPassword, Error.InputError.PasswordLengthError)
         }
         
         if (userPassword != repeatedUserPassword) {
             changeErrorAvailability()
-            onPasswordError(repeatedPasswordInputLayout, etRepeatedPassword, Error.InputError.PasswordsDoNotMatchError)
+            onInputError(repeatedPasswordInputLayout, etRepeatedPassword, Error.InputError.PasswordsDoNotMatchError)
         }
         
         if (!haveSomeError) {
@@ -97,12 +97,6 @@ class RegistrationActivity : AppCompatActivity() {
         turnOnVirtualKeyboard(inputField)
         
         inputLayout.error = error.extract(this@RegistrationActivity)
-    }
-    
-    private fun onPasswordError(passwordInputLayout: TextInputLayout, inputField: View, error: Error) {
-        turnOnVirtualKeyboard(inputField)
-        
-        passwordInputLayout.error = error.extract(this@RegistrationActivity)
     }
     
     private fun hideErrors() = with(views) {
