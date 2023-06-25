@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         val userPasswordValue = etPasswordInput.text.toString()
 
         return when (val foundUser = usersRepository.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
-            null -> Result.failure(Error.InvalidInputError)
+            null -> Result.failure(Error.WrongLoginOrPasswordError)
             else -> Result.success(foundUser)
         }
     }

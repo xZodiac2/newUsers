@@ -6,7 +6,7 @@ data class User(
     val password: String
 ) {
     
-    val userId = id++
+    val userId: Int = id++
     
     companion object {
         private var id: Int = 0

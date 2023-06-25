@@ -15,6 +15,7 @@ class InputTextValidator(
         if (s.length >= inputLayout.counterMaxLength) {
             inputField.setText(s.replace(".$".toRegex(), ""))
         }
+        inputLayout.error = null
     }
     
     override fun afterTextChanged(s: Editable) {}
