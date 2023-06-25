@@ -57,7 +57,11 @@ class RegistrationActivity : AppCompatActivity() {
             onInputError(repeatedPasswordInputLayout, etRepeatedPassword, Error.InputError.PasswordsDoNotMatchError)
         }
         
-        if (nameInputLayout.error == null && loginInputLayout.error == null && passwordInputLayout.error == null && repeatedPasswordInputLayout.error == null) {
+        if (nameInputLayout.error == null &&
+            loginInputLayout.error == null &&
+            passwordInputLayout.error == null &&
+            repeatedPasswordInputLayout.error == null
+        ) {
             val newUser = User(userName, userLogin, userPassword)
             usersRepository.addNewUser(newUser)
             
