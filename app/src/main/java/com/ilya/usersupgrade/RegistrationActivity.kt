@@ -12,9 +12,6 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var views: ActivityRegistrationBinding
     private lateinit var usersRepository: UsersRepository
     
-    private fun newLengthFilter(maxLength: Int): LengthFilter {
-        return LengthFilter(maxLength)
-    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
