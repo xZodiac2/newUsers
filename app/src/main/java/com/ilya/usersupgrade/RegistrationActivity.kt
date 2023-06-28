@@ -12,7 +12,6 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var views: ActivityRegistrationBinding
     private lateinit var usersRepository: UsersRepository
     
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         views = ActivityRegistrationBinding.inflate(layoutInflater).apply {
