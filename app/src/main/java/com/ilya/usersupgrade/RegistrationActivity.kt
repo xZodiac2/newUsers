@@ -72,7 +72,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
     
     private fun onInputError(inputLayout: TextInputLayout, inputField: View, error: Error) {
-        inputLayout.error = error.extract(this@RegistrationActivity)
+        inputLayout.error = error.extract(this)
     }
     
     companion object {
