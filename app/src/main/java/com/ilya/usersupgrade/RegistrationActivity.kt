@@ -1,7 +1,6 @@
 package com.ilya.usersupgrade
 
 import android.os.Bundle
-import android.renderscript.ScriptGroup.Input
 import android.text.InputFilter.LengthFilter
 import android.view.View
 import android.widget.Toast

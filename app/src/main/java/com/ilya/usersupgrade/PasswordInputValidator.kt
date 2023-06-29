@@ -1,6 +1,5 @@
 package com.ilya.usersupgrade
 
-import com.google.android.material.textfield.TextInputEditText
 
 class PasswordInputValidator() : InputValidator() {
     
