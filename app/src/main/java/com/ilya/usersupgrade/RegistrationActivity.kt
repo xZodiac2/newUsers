@@ -1,6 +1,7 @@
 package com.ilya.usersupgrade
 
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Input
 import android.text.InputFilter.LengthFilter
 import android.view.View
 import android.widget.Toast
@@ -11,6 +12,9 @@ class RegistrationActivity : AppCompatActivity() {
     
     private lateinit var views: ActivityRegistrationBinding
     private lateinit var usersRepository: UsersRepository
+    
+    private val passwordInputValidator = PasswordInputValidator()
+    private val inputValidator = InputValidator()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,24 +56,26 @@ class RegistrationActivity : AppCompatActivity() {
     }
     
     private fun inputFieldsIsCorrect(): Boolean = with(views) {
-        nameInputLayout.error = if (!InputValidator(etName).filled())
+        nameInputLayout.error = if (!inputValidator.isFilled(etName.text.toString()))
             Error.InputError.EmptyFieldError.extract(this@RegistrationActivity)
         else
             null
         
         
-        loginInputLayout.error = if (!InputValidator(etLogin).filled())
+        loginInputLayout.error = if (!inputValidator.isFilled(etLogin.text.toString()))
             Error.InputError.EmptyFieldError.extract(this@RegistrationActivity)
         else
             null
         
-        passwordInputLayout.error = if (!PasswordInputValidator(etPassword).isNormalLength())
+        passwordInputLayout.error = if (!passwordInputValidator.isNormalLength(etPassword.text.toString()))
             Error.InputError.PasswordLengthError.extract(this@RegistrationActivity)
         else
             null
         
-        repeatedPasswordInputLayout.error = if (!PasswordInputValidator(etPassword, etRepeatedPassword).passwordsEquals())
+        repeatedPasswordInputLayout.error = if (!passwordInputValidator.isPasswordsEquals(etPassword.text.toString(),etRepeatedPassword.text.toString()))
             Error.InputError.PasswordsDoNotMatchError.extract(this@RegistrationActivity)
+        else if (!passwordInputValidator.isNormalLength(etRepeatedPassword.text.toString()))
+            Error.InputError.PasswordLengthError.extract(this@RegistrationActivity)
         else
             null
         
