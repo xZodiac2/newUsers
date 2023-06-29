@@ -18,7 +18,10 @@ class MainActivity : AppCompatActivity() {
     
         usersRepository = (applicationContext as UsersApplication).usersRepository
     
-        activityMainViews.btnLogin.setOnClickListener(this::login)
+        activityMainViews.apply {
+            btnLogin.setOnClickListener(this@MainActivity::login)
+            btnOfferToRegister.setOnClickListener { startActivity(Intent(this@MainActivity, RegistrationActivity::class.java)) }
+        }
     }
 
     private fun login(view: View) {
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         val userPasswordValue = etPasswordInput.text.toString()
 
         return when (val foundUser = usersRepository.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
-            null -> Result.failure(Error.InvalidInputError)
+            null -> Result.failure(Error.WrongLoginOrPasswordError)
             else -> Result.success(foundUser)
         }
     }
