@@ -52,13 +52,13 @@ class RegistrationActivity : AppCompatActivity() {
     }
     
     private fun inputFieldsIsCorrect(): Boolean = with(views) {
-        nameInputLayout.error = if (InputValidator(etName).isEmpty())
+        nameInputLayout.error = if (!InputValidator(etName).filled())
             Error.InputError.EmptyFieldError.extract(this@RegistrationActivity)
         else
             null
         
         
-        loginInputLayout.error = if (InputValidator(etLogin).isEmpty())
+        loginInputLayout.error = if (!InputValidator(etLogin).filled())
             Error.InputError.EmptyFieldError.extract(this@RegistrationActivity)
         else
             null

@@ -5,5 +5,5 @@ import com.google.android.material.textfield.TextInputEditText
 open class InputValidator(
     private val inputField: TextInputEditText
 ) {
-    fun isEmpty() = inputField.text.toString().isEmpty()
+    fun filled() = inputField.text.toString().isNotEmpty()
 }
