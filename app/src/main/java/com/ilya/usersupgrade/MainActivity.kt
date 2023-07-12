@@ -1,58 +1,20 @@
 package com.ilya.usersupgrade
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.navigation.fragment.NavHostFragment
 import com.ilya.usersupgrade.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     
-    private lateinit var activityMainViews: ActivityMainBinding
-    private lateinit var usersRepository: UsersRepository
+    private lateinit var binding: ActivityMainBinding
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityMainViews = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(activityMainViews.root)
-    
-        usersRepository = (applicationContext as UsersApplication).usersRepository
-    
-        activityMainViews.apply {
-            btnLogin.setOnClickListener(this@MainActivity::login)
-            btnOfferToRegister.setOnClickListener { startActivity(Intent(this@MainActivity, RegistrationActivity::class.java)) }
-        }
-    }
-
-    private fun login(view: View) {
-        authenticate()
-            .onSuccess { user -> giveAccess(user) }
-            .onFailure { error ->
-                activityMainViews.tvError.visibility = View.VISIBLE
-                activityMainViews.tvError.text = (error as Error).extract(this)
-                clearInputFields()
-            }
-    }
-
-    private fun authenticate(): Result<User> = with(activityMainViews) {
-        val userLoginValue = etLoginInput.text.toString()
-        val userPasswordValue = etPasswordInput.text.toString()
-
-        return when (val foundUser = usersRepository.findUserByLoginAndPassword(userLoginValue, userPasswordValue)) {
-            null -> Result.failure(Error.WrongLoginOrPasswordError)
-            else -> Result.success(foundUser)
-        }
-    }
-
-    private fun giveAccess(user: User) {
-        val intent = Intent(this, UserGreetingActivity::class.java)
-        intent.putExtra(UserGreetingActivity.KEY_USER_ID, user.userId)
-        startActivity(intent)
-    }
-
-    private fun clearInputFields() = with(activityMainViews) {
-        etLoginInput.setText("")
-        etPasswordInput.setText("")
+        binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(root) }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        (applicationContext as UsersApplication).navController = navController
     }
     
 }
