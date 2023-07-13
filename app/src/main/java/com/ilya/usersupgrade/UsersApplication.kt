@@ -10,8 +10,6 @@ class UsersApplication : Application() {
     lateinit var usersRepository: UsersRepository
         private set
     
-    lateinit var navController: NavController
-    
     override fun onCreate() {
         super.onCreate()
         usersRepository = UsersRepository()

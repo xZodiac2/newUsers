@@ -1,5 +1,6 @@
 package com.ilya.usersupgrade
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.ilya.usersupgrade.databinding.FragmentLoginBinding
 
 
@@ -17,10 +20,14 @@ class LoginFragment : Fragment() {
     private lateinit var navController: NavController
     private lateinit var usersRepository: UsersRepository
     
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        
+        navController = getNavController()
+        usersRepository = getUsersRepository()
+    }
+    
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -32,19 +39,13 @@ class LoginFragment : Fragment() {
         btnLogin.setOnClickListener(this@LoginFragment::login)
     }
     
-    override fun onStart() {
-        super.onStart()
-        (requireActivity().applicationContext as UsersApplication).apply {
-            this@LoginFragment.navController = navController
-            this@LoginFragment.usersRepository = usersRepository
-        }
-    }
-    
     private fun login(view: View) {
         authenticate()
-            .onSuccess { giveAccess(it) }
+            .onSuccess { user ->
+                val actionToUserGreeting = LoginFragmentDirections.actionLoginFragmentToUserGreetingFragment(user.userId)
+                navController.navigate(actionToUserGreeting)
+            }
             .onFailure { error ->
-                activity
                 binding.tvError.visibility = View.VISIBLE
                 binding.tvError.text = (error as Error).extract(requireActivity())
                 clearInputFields()
@@ -59,11 +60,6 @@ class LoginFragment : Fragment() {
             null -> Result.failure(Error.WrongLoginOrPasswordError)
             else -> Result.success(foundUser)
         }
-    }
-    
-    private fun giveAccess(user: User) {
-        val actionToUserGreeting = LoginFragmentDirections.actionLoginFragmentToUserGreetingFragment(user.userId)
-        navController.navigate(actionToUserGreeting)
     }
     
     private fun clearInputFields() = with(binding) {

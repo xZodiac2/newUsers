@@ -3,42 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/login_fragment">
 
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/login_fragment"
         android:name="com.ilya.usersupgrade.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_loginFragment_to_userGreetingFragment"
-            app:destination="@id/userGreetingFragment">
+            android:id="@+id/action_login_fragment_to_user_greeting_fragment"
+            app:destination="@id/user_greeting_fragment">
             <argument
                 android:name="userId"
                 app:argType="integer"
                 android:defaultValue="-1" />
         </action>
         <action
-            android:id="@+id/action_loginFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment" />
+            android:id="@+id/action_login_fragment_to_registration_fragment"
+            app:destination="@id/registration_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/registrationFragment"
+        android:id="@+id/registration_fragment"
         android:name="com.ilya.usersupgrade.RegistrationFragment"
         android:label="fragment_registration"
         tools:layout="@layout/fragment_registration" >
         <action
-            android:id="@+id/action_registrationFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_registration_fragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/userGreetingFragment"
+        android:id="@+id/user_greeting_fragment"
         android:name="com.ilya.usersupgrade.UserGreetingFragment"
         android:label="fragment_user_greeting"
         tools:layout="@layout/fragment_user_greeting" >
         <action
-            android:id="@+id/action_userGreetingFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_user_greetingFragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
     </fragment>
 </navigation>

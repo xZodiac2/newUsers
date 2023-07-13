@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.accessibility.AccessibilityViewCommand.MoveWindowArguments
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.ilya.usersupgrade.databinding.FragmentLoginBinding
 import com.ilya.usersupgrade.databinding.FragmentRegistrationBinding
 
@@ -23,17 +25,13 @@ class RegistrationFragment : Fragment() {
     
     override fun onAttach(context: Context) {
         super.onAttach(context)
-    
-        (requireActivity().applicationContext as UsersApplication).apply {
-            this@RegistrationFragment.navController = navController
-            this@RegistrationFragment.usersRepository = usersRepository
-        }
+        
+        navController = getNavController()
+        usersRepository = getUsersRepository()
+        
     }
     
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,47 +43,56 @@ class RegistrationFragment : Fragment() {
     }
     
     private fun register(view: View) = with(binding) {
-        if (inputFieldsIsCorrect()) {
-            val userName = etName.text.toString()
-            val userLogin = etLogin.text.toString()
-            val userPassword = etPassword.text.toString()
+        if (!inputFieldsIsCorrect()) return
         
-            val newUser = User(userName, userLogin, userPassword)
-            usersRepository.addNewUser(newUser)
+        val userName = etName.text.toString()
+        val userLogin = etLogin.text.toString()
+        val userPassword = etPassword.text.toString()
         
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.text_registration_user_added_successfully),
-                Toast.LENGTH_SHORT
-            ).show()
+        val newUser = User(userName, userLogin, userPassword)
+        usersRepository.addNewUser(newUser)
         
-            backToLogin()
-        }
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.text_registration_user_added_successfully),
+            Toast.LENGTH_SHORT
+        ).show()
+        
+        backToLogin()
     }
     
     private fun inputFieldsIsCorrect(): Boolean = with(binding) {
-        nameInputLayout.error = if (!inputValidator.isFilled(etName.text.toString()))
-            Error.InputError.EmptyFieldError.extract(requireContext())
-        else
+        val name = etName.text.toString()
+        val login = etLogin.text.toString()
+        val password = etPassword.text.toString()
+        val repeatedPassword = etRepeatedPassword.text.toString()
+        
+        nameInputLayout.error = if (inputValidator.isFilled(name)) {
             null
-        
-        
-        loginInputLayout.error = if (!inputValidator.isFilled(etLogin.text.toString()))
+        } else {
             Error.InputError.EmptyFieldError.extract(requireContext())
-        else
-            null
+        }
         
-        passwordInputLayout.error = if (!passwordInputValidator.isNormalLength(etPassword.text.toString()))
+        
+        loginInputLayout.error = if (inputValidator.isFilled(login)) {
+            null
+        } else {
+            Error.InputError.EmptyFieldError.extract(requireContext())
+        }
+        
+        passwordInputLayout.error = if (passwordInputValidator.isNormalLength(password)) {
+            null
+        } else {
             Error.InputError.PasswordLengthError.extract(requireContext())
-        else
-            null
+        }
         
-        repeatedPasswordInputLayout.error = if (!passwordInputValidator.isPasswordsEquals(etPassword.text.toString(),etRepeatedPassword.text.toString()))
+        repeatedPasswordInputLayout.error = if (!passwordInputValidator.isPasswordsEquals(password, repeatedPassword)) {
             Error.InputError.PasswordsDoNotMatchError.extract(requireContext())
-        else if (!passwordInputValidator.isNormalLength(etRepeatedPassword.text.toString()))
+        } else if (!passwordInputValidator.isNormalLength(repeatedPassword)) {
             Error.InputError.PasswordLengthError.extract(requireContext())
-        else
+        } else {
             null
+        }
         
         return (nameInputLayout.error == null &&
                 loginInputLayout.error == null &&
@@ -93,7 +100,7 @@ class RegistrationFragment : Fragment() {
                 repeatedPasswordInputLayout.error == null)
         
     }
- 
+    
     private fun backToLogin() {
         navController.navigate(RegistrationFragmentDirections.actionRegistrationFragmentToLoginFragment())
     }
