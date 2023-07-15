@@ -11,9 +11,9 @@ fun Error.extract(context: Context): String {
 }
 
 fun Fragment.getNavController(): NavController {
-    return (this.requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+    return (requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 }
 
 fun Fragment.getUsersRepository(): UsersRepository {
-    return (this.requireActivity().applicationContext as UsersApplication).usersRepository
+    return (requireActivity().applicationContext as UsersApplication).usersRepository
 }
