@@ -6,9 +6,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UsersRepository @Inject constructor() {
-    
-    private val usersStorage = UsersStorage()
+class UsersRepository @Inject internal constructor(
+    private val usersStorage: UsersStorage
+) {
     
     fun getUserByLoginAndPassword(login: String, password: String): User? {
         return usersStorage.users.find { user -> user.login == login && user.password == password }

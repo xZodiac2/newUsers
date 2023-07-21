@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
         val password = etPasswordInput.text.toString()
         
         return when(val foundUser = usersRepository.getUserByLoginAndPassword(login, password)) {
-            null -> Result.failure(Error.Login.WrongLoginOrPassword)
+            null -> Result.failure(Error.LoginError.WrongLoginOrPasswordError)
             else -> Result.success(foundUser)
         }
     }

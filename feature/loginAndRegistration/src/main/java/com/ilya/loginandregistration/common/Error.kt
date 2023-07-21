@@ -7,14 +7,14 @@ internal sealed class Error(
     @StringRes val stringId: Int
 ) : Throwable() {
     
-    sealed class Registration(@StringRes stringId: Int) : Error(stringId) {
-        object PasswordsDoNotMatch : Registration(R.string.text_registration_passwords_do_not_match_error)
-        object PasswordLength : Registration(R.string.text_registration_password_is_small_error)
-        object EmptyField : Registration(R.string.text_registration_empty_field_error)
+    sealed class RegistrationError(@StringRes stringId: Int) : Error(stringId) {
+        object PasswordsDoNotMatchError : RegistrationError(R.string.text_registration_passwords_do_not_match_error)
+        object PasswordLengthError : RegistrationError(R.string.text_registration_password_is_small_error)
+        object EmptyFieldError : RegistrationError(R.string.text_registration_empty_field_error)
     }
 
-    sealed class Login(@StringRes stringId: Int) : Error(stringId) {
-        object WrongLoginOrPassword : Login(R.string.text_error_invalid_input)
+    sealed class LoginError(@StringRes stringId: Int) : Error(stringId) {
+        object WrongLoginOrPasswordError : LoginError(R.string.text_error_invalid_input)
     }
     
 }
