@@ -3,42 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/login_fragment">
+    app:startDestination="@id/navigation">
 
-    <fragment
-        android:id="@+id/login_fragment"
-        android:name="com.ilya.usersupgrade.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_login_fragment_to_user_greeting_fragment"
-            app:destination="@id/user_greeting_fragment">
-            <argument
-                android:name="userId"
-                app:argType="integer"
-                android:defaultValue="-1" />
-        </action>
-        <action
-            android:id="@+id/action_login_fragment_to_registration_fragment"
-            app:destination="@id/registration_fragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/registration_fragment"
-        android:name="com.ilya.usersupgrade.RegistrationFragment"
-        android:label="fragment_registration"
-        tools:layout="@layout/fragment_registration" >
-        <action
-            android:id="@+id/action_registration_fragment_to_login_fragment"
-            app:destination="@id/login_fragment" />
-    </fragment>
     <fragment
         android:id="@+id/user_greeting_fragment"
-        android:name="com.ilya.usersupgrade.UserGreetingFragment"
+        android:name="com.ilya.greeting.GreetingFragment"
         android:label="fragment_user_greeting"
-        tools:layout="@layout/fragment_user_greeting" >
+        tools:layout="@layout/fragment_greeting" >
         <action
             android:id="@+id/action_user_greetingFragment_to_login_fragment"
-            app:destination="@id/login_fragment" />
+            app:destination="@id/navigation" />
     </fragment>
+
+    <navigation android:id="@+id/navigation"
+        app:startDestination="@id/login_fragment">
+        <fragment
+            android:id="@+id/registration_fragment"
+            android:name="com.ilya.loginandregistration.registration.RegistrationFragment"
+            android:label="fragment_registration"
+            tools:layout="@layout/fragment_registration">
+            <action
+                android:id="@+id/action_registration_fragment_to_login_fragment"
+                app:destination="@id/login_fragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/login_fragment"
+            android:name="com.ilya.loginandregistration.login.LoginFragment"
+            android:label="fragment_login"
+            tools:layout="@layout/fragment_login">
+            <action
+                android:id="@+id/action_login_fragment_to_user_greeting_fragment"
+                app:destination="@id/user_greeting_fragment">
+                <argument
+                    android:name="userId"
+                    android:defaultValue="-1"
+                    app:argType="integer" />
+            </action>
+            <action
+                android:id="@+id/action_login_fragment_to_registration_fragment"
+                app:destination="@id/registration_fragment" />
+        </fragment>
+    </navigation>
 </navigation>
