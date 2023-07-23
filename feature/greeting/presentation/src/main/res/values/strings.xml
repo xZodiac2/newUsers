@@ -1,0 +1,4 @@
+<resources>
+    <string name="text_greeting">Hello, </string>
+    <string name="text_unlogin">Logout</string>
+</resources>
