@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ilya.data.users.UsersRepository
 import com.ilya.core.exceptions.UserNotFoundException
-import com.ilya.domain.models.UserLoginParams
-import com.ilya.domain.usecases.FindUserByLoginAndPasswordUseCase
+import com.ilya.domain.models.login.UserLoginParams
+import com.ilya.domain.usecases.login.FindUserByLoginAndPasswordUseCase
 import com.ilya.presentation.R
 import com.ilya.presentation.databinding.FragmentLoginBinding
 import com.ilya.presentation.login.navigation.LoginFragmentRouter
@@ -33,6 +33,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         binding.btnLogin.setOnClickListener(this::login)
+        binding.btnOfferToRegister.setOnClickListener { loginFragmentRouter.goToRegistration() }
     }
     
     private fun login(view: View) = with(binding) {
