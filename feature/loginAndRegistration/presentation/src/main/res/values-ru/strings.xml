@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_login_input">Введите логин</string>
+    <string name="text_password_input">Введите пароль</string>
+    <string name="text_login_button">Войти</string>
+    <string name="text_error_invalid_input">Неверный лоигн или пароль</string>
+    <string name="text_main_greetieng">Добро пожаловать!</string>
+    <string name="text_offer_to_register">Нету аккаунта? Зарегестрироваться</string>
+    <string name="text_registration_hint_name_input">Введите имя</string>
+    <string name="text_registration_hint_login_input">Введите логин</string>
+    <string name="text_registration_hint_password_input">Введите пароль</string>
+    <string name="text_registration_hint_repeated_password_input">Повторите пароль</string>
+    <string name="text_registration_button_register">Зарегестрироваться</string>
+    <string name="text_registration_passwords_do_not_match_error">Пароли не совпадают</string>
+    <string name="text_registration_password_is_small_error">Минимальная длин пароль 8 символов</string>
+    <string name="text_registration_empty_field_error">Это поле не может быть пустым</string>
+    <string name="text_registration_user_added_successfully">Вы успешно зарегестрированны</string>
+    <string name="text_registration_title">Регистрация</string>
+</resources>

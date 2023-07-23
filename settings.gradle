@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "usersUpgrade"
 include ':app'
+include ':data'
+include ':core'
+include ':feature:greeting:presentation'
+include ':feature:greeting:domain'
+include ':feature:loginAndRegistration:presentation'
+include ':feature:loginAndRegistration:domain'
