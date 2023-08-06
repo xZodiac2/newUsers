@@ -7,7 +7,7 @@ import com.ilya.core.extract
 import com.ilya.loginandregistration.R
 import com.ilya.loginandregistration.registration.domain.usecases.inputValidators.CheckInputFieldsUseCase
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsValues
-import com.ilya.loginandregistration.registration.domain.models.User
+import com.ilya.loginandregistration.registration.domain.models.NewUserData
 import com.ilya.loginandregistration.registration.domain.usecases.RegisterNewUserUseCase
 import com.ilya.loginandregistration.registration.presentation.models.InputFieldsLayouts
 import com.ilya.loginandregistration.registration.presentation.navigation.RegistrationFragmentRouter
@@ -31,14 +31,11 @@ class RegistrationViewModel @Inject constructor(
             val login = this.login
             val password = this.password
             
-            val user = User(name, login, password)
+            val user = NewUserData(name, login, password)
             
             registerNewUserUseCase(user)
-            
             Toast.makeText(context, context.getString(R.string.text_registration_user_added_successfully), Toast.LENGTH_SHORT).show()
-            
             registrationFragmentRouter.backToLogin()
-            
         }
     }
     
