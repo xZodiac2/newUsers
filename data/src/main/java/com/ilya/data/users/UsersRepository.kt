@@ -1,26 +1,26 @@
 package com.ilya.data.users
 
-import com.ilya.core.models.User
-import com.ilya.domain.models.login.UserLoginParams
-import com.ilya.domain.usersrepository.UserAdder
-import com.ilya.domain.usersrepository.UserFinder
-import com.ilya.domain.usersrepository.UserFinderById
+import com.ilya.core.findFirstOrNull
+import com.ilya.data.users.models.UserData
+import com.ilya.data.users.models.UserAuthenticateParams
+import com.ilya.data.users.repositoryInterface.UserAdder
+import com.ilya.data.users.repositoryInterface.UserFinderById
+import com.ilya.data.users.repositoryInterface.UserFinderByLoginParams
 import javax.inject.Inject
 
-class UsersRepository @Inject internal constructor(
+internal class UsersRepository @Inject constructor(
     private val usersStorage: UsersStorage
-) : UserFinder, UserFinderById, UserAdder {
-    
-    override fun findUserById(id: Int) : User? {
-        return usersStorage.users.find {it.id == id}
+) : UserFinderById, UserFinderByLoginParams, UserAdder {
+    override fun addNewUser(user: UserData) {
+        usersStorage.users[user.id] = user
     }
     
-    override fun findUserByLoginAndPassword(userLoginParams: UserLoginParams): User? {
-        return usersStorage.users.find {it.login == userLoginParams.login && it.password == userLoginParams.password}
+    override fun findUserById(id: Int): UserData? {
+        return usersStorage.users[id]
     }
     
-    override fun addNewUser(user: User) {
-        usersStorage.users += user
+    override fun findUserByLoginParams(authenticateParams: UserAuthenticateParams): UserData? {
+        return usersStorage.users.findFirstOrNull { user -> user.login == authenticateParams.login && user.password == authenticateParams.password }
     }
     
 }

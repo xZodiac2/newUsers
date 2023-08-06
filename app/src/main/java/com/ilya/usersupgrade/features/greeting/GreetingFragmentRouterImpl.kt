@@ -1,8 +1,8 @@
 package com.ilya.usersupgrade.features.greeting
 
 import androidx.navigation.NavController
-import com.ilya.presentation.GreetingFragmentDirections
-import com.ilya.presentation.navigation.GreetingFragmentRouter
+import com.ilya.greeting.presentation.GreetingFragmentDirections
+import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
 import javax.inject.Inject
 
 class GreetingFragmentRouterImpl @Inject constructor(

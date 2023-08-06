@@ -1,9 +1,10 @@
 package com.ilya.usersupgrade.features.loginAndRegistration.login
 
 import androidx.navigation.NavController
-import com.ilya.presentation.login.LoginFragmentDirections
-import com.ilya.presentation.login.navigation.LoginFragmentRouter
+import com.ilya.loginandregistration.login.presentation.LoginFragmentDirections
+import com.ilya.loginandregistration.login.presentation.navigation.LoginFragmentRouter
 import javax.inject.Inject
+
 
 class LoginFragmentRouterImpl @Inject constructor(
     private val navController: NavController

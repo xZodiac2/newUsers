@@ -1,14 +1,13 @@
 package com.ilya.data.users
 
-import com.ilya.core.models.User
+import com.ilya.data.users.models.UserData
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class UsersStorage @Inject constructor() {
-    val users = mutableListOf(
-        User("Ilya", "tomat228", "123"),
-        User("SSergey", "Zodiac", "bombom"),
-        User("Andrey", "bobik", "kotbegemot")
+    val users = hashMapOf(
+        0 to UserData("Ilya", "tomat228", "123"),
+        1 to UserData("SSergey", "Zodiac", "bombom")
     )
 }

@@ -16,6 +16,7 @@ import com.ilya.domain.usecases.registration.RegisterNewUserUseCase
 import com.ilya.presentation.R
 import com.ilya.presentation.databinding.FragmentRegistrationBinding
 import com.ilya.presentation.registration.navigation.RegistrationFragmentRouter
+import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

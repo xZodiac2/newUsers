@@ -1,14 +1,14 @@
 package com.ilya.usersupgrade.features.greeting
 
-import com.ilya.presentation.navigation.GreetingFragmentRouter
+import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(ViewModelComponent::class)
 interface GreetingFragmentRouterModule {
     @Binds
-    fun bindGreetingFragmentRouter(greetingFragmentRouterImpl: GreetingFragmentRouterImpl): GreetingFragmentRouter
+    fun bindGreetingFragmentRouterImpl(greetingFragmentRouterImpl: GreetingFragmentRouterImpl): GreetingFragmentRouter
 }
