@@ -10,6 +10,7 @@ import com.ilya.loginandregistration.login.domain.models.LoginParams
 import com.ilya.loginandregistration.login.domain.exception.UserIsNotFoundByLoginParamsException
 import com.ilya.loginandregistration.login.presentation.error.LoginError
 import com.ilya.loginandregistration.login.presentation.navigation.LoginFragmentRouter
+import com.ilya.loginandregistration.registration.domain.usecases.RegisterNewUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

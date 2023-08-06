@@ -3,9 +3,10 @@ package com.ilya.loginandregistration.registration.domain.usecases.inputValidato
 import com.ilya.loginandregistration.registration.domain.error.RegistrationError
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsErrors
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsValues
+import javax.inject.Inject
 
-class CheckRepeatedPasswordFieldUseCase {
-    operator fun invoke(oldValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
+class CheckRepeatedPasswordFieldValueUseCase @Inject constructor() {
+    operator fun invoke(previousValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
         
         val password = inputFieldsValues.password
         val repeatedPassword = inputFieldsValues.repeatedPassword
@@ -18,13 +19,13 @@ class CheckRepeatedPasswordFieldUseCase {
             null
         }
         
-        oldValidationResult.apply {
+        previousValidationResult.apply {
             return InputFieldsErrors(this.name, this.login, this.password, validationResult)
         }
         
     }
     
-    companion object {
-        private const val NECESSARY_REPEATED_PASSWORD_LENGTH = 8
+    private companion object {
+        const val NECESSARY_REPEATED_PASSWORD_LENGTH = 8
     }
 }

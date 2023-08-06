@@ -3,14 +3,17 @@ package com.ilya.loginandregistration.registration.domain.usecases.inputValidato
 import com.ilya.loginandregistration.registration.domain.error.RegistrationError
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsErrors
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsValues
+import javax.inject.Inject
 
-class CheckPasswordFieldValueUseCase {
-    operator fun invoke(oldValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
+class CheckPasswordFieldValueUseCase @Inject constructor(
+    private val checkRepeatedPasswordFieldValueUseCase: CheckRepeatedPasswordFieldValueUseCase
+) {
+    operator fun invoke(previousValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
         val validationResult: RegistrationError? = if (inputFieldsValues.password.length < NECESSARY_PASSWORD_LENGTH) RegistrationError.ShortFieldLength else null
-        return CheckRepeatedPasswordFieldUseCase()(InputFieldsErrors(oldValidationResult.name, oldValidationResult.login, validationResult), inputFieldsValues)
+        return checkRepeatedPasswordFieldValueUseCase(InputFieldsErrors(previousValidationResult.name, previousValidationResult.login, validationResult), inputFieldsValues)
     }
     
-    companion object {
-        private const val NECESSARY_PASSWORD_LENGTH = 8
+    private companion object {
+        const val NECESSARY_PASSWORD_LENGTH = 8
     }
 }

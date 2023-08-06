@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.ilya.greeting.R
 import com.ilya.greeting.domain.usecases.FindUserByIdUseCase
 import com.ilya.greeting.domain.exception.UserIsNotFoundByIdException
-import com.ilya.greeting.domain.models.User
+import com.ilya.greeting.domain.models.UserDataForGreeting
 import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class GreetingViewModel @Inject constructor(
         if (!userIdIsNotDefault(userId)) backToLogin()
         
         try {
-            val user: User = findUserByIdUseCase(userId)
+            val user: UserDataForGreeting = findUserByIdUseCase(userId)
             _userGreeting.value = "${context.getString(R.string.text_greeting)} ${user.name}"
         } catch (ex: UserIsNotFoundByIdException) {
             backToLogin()
