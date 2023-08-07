@@ -3,8 +3,9 @@ package com.ilya.loginandregistration.registration.domain.usecases.inputValidato
 import com.ilya.loginandregistration.registration.domain.error.RegistrationError
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsErrors
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsValues
+import javax.inject.Inject
 
-class CheckRepeatedPasswordFieldUseCase {
+class CheckRepeatedPasswordFieldValueUseCase @Inject constructor() {
     operator fun invoke(oldValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
         
         val password = inputFieldsValues.password

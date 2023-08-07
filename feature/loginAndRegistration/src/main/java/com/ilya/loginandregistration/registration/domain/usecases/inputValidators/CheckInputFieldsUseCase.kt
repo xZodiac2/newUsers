@@ -4,7 +4,9 @@ import com.ilya.loginandregistration.registration.domain.models.InputFieldsError
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsValues
 import javax.inject.Inject
 
-class CheckInputFieldsUseCase @Inject constructor() {
+class CheckInputFieldsUseCase @Inject constructor(
+    private val checkNameFieldValueUseCase: CheckNameFieldValueUseCase
+) {
     
     /**
      * This method starts sequence of validation input fields.
@@ -14,6 +16,6 @@ class CheckInputFieldsUseCase @Inject constructor() {
      */
     
     operator fun invoke(inputFieldsValues: InputFieldsValues): InputFieldsErrors {
-        return CheckNameFieldValueUseCase()(inputFieldsValues)
+        return checkNameFieldValueUseCase(inputFieldsValues)
     }
 }
