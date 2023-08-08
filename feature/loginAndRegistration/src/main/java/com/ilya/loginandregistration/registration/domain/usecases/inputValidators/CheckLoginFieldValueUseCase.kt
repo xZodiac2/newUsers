@@ -10,7 +10,7 @@ class CheckLoginFieldValueUseCase @Inject constructor(
     private val checkPasswordFieldValueUseCase: CheckPasswordFieldValueUseCase,
     private val isLoginUsedByOtherUserUseCase: IsLoginUsedByOtherUserUseCase
 ) {
-    operator fun invoke(oldValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
+    operator fun invoke(previousValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
         val validationResult: RegistrationError? = if (inputFieldsValues.login.isEmpty()) {
             RegistrationError.FieldIsEmpty
         } else if (isLoginUsedByOtherUserUseCase(inputFieldsValues.login)) {
@@ -19,6 +19,6 @@ class CheckLoginFieldValueUseCase @Inject constructor(
             null
         }
         
-        return checkPasswordFieldValueUseCase(InputFieldsErrors(oldValidationResult.name, validationResult), inputFieldsValues)
+        return checkPasswordFieldValueUseCase(InputFieldsErrors(previousValidationResult.name, validationResult), inputFieldsValues)
     }
 }

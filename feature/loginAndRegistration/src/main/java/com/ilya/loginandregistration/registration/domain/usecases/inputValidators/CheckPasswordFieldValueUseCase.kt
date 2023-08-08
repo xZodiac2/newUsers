@@ -8,9 +8,9 @@ import javax.inject.Inject
 class CheckPasswordFieldValueUseCase @Inject constructor(
     private val checkRepeatedPasswordFieldValueUseCase: CheckRepeatedPasswordFieldValueUseCase
 ) {
-    operator fun invoke(oldValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
+    operator fun invoke(previousValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
         val validationResult: RegistrationError? = if (inputFieldsValues.password.length < NECESSARY_PASSWORD_LENGTH) RegistrationError.ShortFieldLength else null
-        return checkRepeatedPasswordFieldValueUseCase(InputFieldsErrors(oldValidationResult.name, oldValidationResult.login, validationResult), inputFieldsValues)
+        return checkRepeatedPasswordFieldValueUseCase(InputFieldsErrors(previousValidationResult.name, previousValidationResult.login, validationResult), inputFieldsValues)
     }
     
     private companion object {

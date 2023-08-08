@@ -6,7 +6,7 @@ import com.ilya.loginandregistration.registration.domain.models.InputFieldsValue
 import javax.inject.Inject
 
 class CheckRepeatedPasswordFieldValueUseCase @Inject constructor() {
-    operator fun invoke(oldValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
+    operator fun invoke(previousValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
         
         val password = inputFieldsValues.password
         val repeatedPassword = inputFieldsValues.repeatedPassword
@@ -19,7 +19,7 @@ class CheckRepeatedPasswordFieldValueUseCase @Inject constructor() {
             null
         }
         
-        oldValidationResult.apply {
+        previousValidationResult.apply {
             return InputFieldsErrors(this.name, this.login, this.password, validationResult)
         }
         
