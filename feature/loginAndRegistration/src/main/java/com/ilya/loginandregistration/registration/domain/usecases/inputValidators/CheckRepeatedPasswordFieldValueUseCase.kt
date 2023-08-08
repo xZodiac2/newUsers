@@ -25,7 +25,7 @@ class CheckRepeatedPasswordFieldValueUseCase @Inject constructor() {
         
     }
     
-    companion object {
-        private const val NECESSARY_REPEATED_PASSWORD_LENGTH = 8
+    private companion object {
+        const val NECESSARY_REPEATED_PASSWORD_LENGTH = 8
     }
 }

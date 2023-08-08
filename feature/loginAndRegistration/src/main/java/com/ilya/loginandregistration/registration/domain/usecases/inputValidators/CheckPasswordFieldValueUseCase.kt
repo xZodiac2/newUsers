@@ -13,7 +13,7 @@ class CheckPasswordFieldValueUseCase @Inject constructor(
         return checkRepeatedPasswordFieldValueUseCase(InputFieldsErrors(oldValidationResult.name, oldValidationResult.login, validationResult), inputFieldsValues)
     }
     
-    companion object {
-        private const val NECESSARY_PASSWORD_LENGTH = 8
+    private companion object {
+        const val NECESSARY_PASSWORD_LENGTH = 8
     }
 }
