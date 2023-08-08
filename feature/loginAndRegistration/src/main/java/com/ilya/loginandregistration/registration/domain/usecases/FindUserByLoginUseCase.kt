@@ -5,7 +5,7 @@ import com.ilya.data.users.repositoryInterface.UserFinderByLogin
 import javax.inject.Inject
 
 /**
- * This usecase use for check, is are user login already used by other user.
+ * This usecase use only for check, is are user login already used by other user.
  */
 
 class FindUserByLoginUseCase @Inject constructor(
