@@ -3,17 +3,17 @@ package com.ilya.loginandregistration.registration.domain.usecases.inputValidato
 import com.ilya.loginandregistration.registration.domain.error.RegistrationError
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsErrors
 import com.ilya.loginandregistration.registration.domain.models.InputFieldsValues
-import com.ilya.loginandregistration.registration.domain.usecases.FindUserByLoginUseCase
+import com.ilya.loginandregistration.registration.domain.usecases.IsLoginUsedByOtherUserUseCase
 import javax.inject.Inject
 
 class CheckLoginFieldValueUseCase @Inject constructor(
     private val checkPasswordFieldValueUseCase: CheckPasswordFieldValueUseCase,
-    private val findUserByLoginUseCase: FindUserByLoginUseCase
+    private val isLoginUsedByOtherUserUseCase: IsLoginUsedByOtherUserUseCase
 ) {
     operator fun invoke(oldValidationResult: InputFieldsErrors, inputFieldsValues: InputFieldsValues): InputFieldsErrors {
         val validationResult: RegistrationError? = if (inputFieldsValues.login.isEmpty()) {
             RegistrationError.FieldIsEmpty
-        } else if (findUserByLoginUseCase(inputFieldsValues.login) != null) {
+        } else if (isLoginUsedByOtherUserUseCase(inputFieldsValues.login)) {
               RegistrationError.LoginIsAlreadyUsed
         } else {
             null

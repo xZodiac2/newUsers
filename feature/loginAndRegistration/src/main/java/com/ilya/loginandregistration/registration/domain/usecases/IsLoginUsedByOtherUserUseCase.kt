@@ -4,14 +4,10 @@ import com.ilya.data.users.models.UserData
 import com.ilya.data.users.repositoryInterface.UserFinderByLogin
 import javax.inject.Inject
 
-/**
- * This usecase use only for check, is are user login already used by other user.
- */
-
-class FindUserByLoginUseCase @Inject constructor(
+class IsLoginUsedByOtherUserUseCase @Inject constructor(
     private val userFinderByLogin: UserFinderByLogin
 ) {
-    operator fun invoke(login: String): UserData? {
-        return userFinderByLogin.findUserByLogin(login)
+    operator fun invoke(login: String): Boolean {
+        return userFinderByLogin.findUserByLogin(login) != null
     }
 }
