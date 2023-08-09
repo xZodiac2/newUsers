@@ -1,6 +1,6 @@
 package com.ilya.loginandregistration.login.presentation.navigation
 
 interface LoginFragmentRouter {
-    fun goToGreeting(userId: Int)
+    fun goToGreeting(login: String)
     fun goToRegistration()
 }

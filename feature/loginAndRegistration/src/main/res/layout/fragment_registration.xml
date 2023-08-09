@@ -1,115 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".registration.presentation.RegistrationFragment">
+    tools:context=".registration.presentation.RegistrationFragment"
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text="@string/text_registration_title"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name_input_layout"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="25"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="46dp"
+            android:text="@string/text_registration_title"
+            android:textSize="32sp" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/text_registration_hint_name_input" />
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="52dp"
+            android:background="@drawable/nested_layout_corners"
+            android:elevation="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingVertical="20dp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="25"
+                android:hint="@string/text_registration_hint_name_input">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_input_layout"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="25"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="@id/name_input_layout"
-        app:layout_constraintStart_toStartOf="@id/name_input_layout"
-        app:layout_constraintTop_toBottomOf="@id/name_input_layout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_login"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/text_registration_hint_login_input" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="25"
+                android:hint="@string/text_registration_hint_login_input">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_input_layout"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="25"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="@id/login_input_layout"
-        app:layout_constraintStart_toStartOf="@id/login_input_layout"
-        app:layout_constraintTop_toBottomOf="@id/login_input_layout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textPassword"
-            android:hint="@string/text_registration_hint_password_input" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="25"
+                app:endIconMode="password_toggle"
+                android:hint="@string/text_registration_hint_password_input">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/repeated_password_input_layout"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="25"
-        app:layout_constraintEnd_toEndOf="@id/password_input_layout"
-        app:layout_constraintStart_toStartOf="@id/password_input_layout"
-        app:layout_constraintTop_toBottomOf="@id/password_input_layout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_repeated_password"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textPassword"
-            android:hint="@string/text_registration_hint_repeated_password_input" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/repeated_password_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="25"
+                app:endIconMode="password_toggle"
+                android:hint="@string/text_registration_hint_repeated_password_input">
 
-    <Button
-        android:id="@+id/btn_register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/text_registration_button_register"
-        app:layout_constraintEnd_toEndOf="@+id/repeated_password_input_layout"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="@+id/repeated_password_input_layout"
-        app:layout_constraintTop_toBottomOf="@+id/repeated_password_input_layout" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_repeated_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"/>
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/btn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_registration_button_register" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

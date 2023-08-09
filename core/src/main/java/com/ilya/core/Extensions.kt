@@ -1,22 +1,27 @@
 package com.ilya.core
 
 import android.content.Context
-import com.ilya.core.abstractClasses.UsersApplicationError
+import android.widget.TextView
+import com.google.android.material.textfield.TextInputLayout
+import java.security.MessageDigest
 
-
-fun <K, V> Map<K, V>.findFirstOrNull(conditionOfFinding: (V) -> Boolean): V? {
-    var searchable: V? = null
+fun String.computedMD5Hash(): String {
+    val digested = MessageDigest.getInstance("MD5").digest(this.toByteArray())
+    val stringBuilder = StringBuilder()
     
-    forEach {(_, V) ->
-        if (conditionOfFinding(V)) {
-            searchable = V
-            return@forEach
-        }
-    }
+    digested.forEach { byte -> stringBuilder.append(String.format("%02x", byte)) }
     
-    return searchable
+    return stringBuilder.toString()
 }
 
-fun UsersApplicationError.extract(context: Context): String {
-    return context.getString(stringId)
+fun Context.getStringByReference(textReference: TextReference): String {
+    return when(textReference) {
+        is TextReference.Resource -> getString(textReference.stringId, *textReference.formatArgs.toTypedArray())
+        is TextReference.PluralResource -> resources.getQuantityString(textReference.id, textReference.count, *textReference.formatArgs.toTypedArray())
+        is TextReference.Str -> textReference.value
+    }
+}
+
+fun TextView.setTextByReference(textReference: TextReference?) {
+    text = if (textReference == null) null else context.getStringByReference(textReference)
 }

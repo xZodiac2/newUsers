@@ -1,5 +1,4 @@
 package com.ilya.core.abstractClasses
 
-import androidx.annotation.StringRes
-
-abstract class UsersApplicationError(@StringRes open val stringId: Int) : Throwable()
+abstract class UsersApplicationError internal constructor(override val message: String? = null) : Throwable(message) {
+}

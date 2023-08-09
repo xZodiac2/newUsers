@@ -5,16 +5,19 @@
     <string name="text_login_button">Войти</string>
     <string name="text_error_invalid_input">Неверный логин или пароль</string>
     <string name="text_main_greeting">Добро пожаловать!</string>
-    <string name="text_offer_to_register">Нету аккаунта? Зарегестрироваться</string>
+    <string name="text_offer_to_register">Нету аккаунта? Зарегистрироваться</string>
     <string name="text_registration_title">Регистрация</string>
     <string name="text_registration_hint_name_input">Введите имя</string>
     <string name="text_registration_hint_login_input">Введите логин</string>
     <string name="text_registration_hint_password_input">Введите пароль</string>
     <string name="text_registration_hint_repeated_password_input">Повторите пароль</string>
-    <string name="text_registration_button_register">Зарегестрироваться</string>
-    <string name="text_registration_passwords_do_not_match_error">Пароли не совпадают</string>
-    <string name="text_registration_password_is_small_error">Минимальная длина пароля 8 символов</string>
-    <string name="text_registration_empty_field_error">Это поле не может быть пустым</string>
-    <string name="text_registration_user_added_successfully">Вы успешно зарегестрированны</string>
-    <string name="text_registration_login_is_already_used">Этот логин уже используется. Пожалуйста выберите другой логин</string>
+    <string name="text_registration_button_register">Зарегистрироваться</string>
+    <string name="text_registration_fields_do_not_match_error">- Пароли не совпадают</string>
+    <string name="text_registration_password_is_small_error">- Минимальная длина пароля 8 символов</string>
+    <string name="text_registration_empty_field_error">- Это поле не может быть пустым</string>
+    <string name="text_registration_user_added_successfully">Вы успешно зарегистрированны</string>
+    <string name="text_registration_login_is_already_used">- Этот логин уже используется. Выберите другой логин</string>
+    <string name="text_registration_illegal_characters_error">- Это поле не может содержать специальные символы</string>
+    <string name="text_registration_login_is_short">- Минимальная длина логина 3 символа</string>
+    <string name="text_login_error_unknown">Неизвестная ошибка</string>
 </resources>

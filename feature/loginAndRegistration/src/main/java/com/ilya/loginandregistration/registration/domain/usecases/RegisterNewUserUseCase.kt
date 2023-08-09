@@ -1,14 +1,29 @@
-package com.ilya.loginandregistration.registration.domain.usecases
+package com.ilya.loginandregistration.registration.domain.useCases
 
-import com.ilya.data.users.models.UserData
-import com.ilya.data.users.repositoryInterface.UserAdder
-import com.ilya.loginandregistration.registration.domain.models.DataOfNewUser
+import com.ilya.core.UseCase
+import com.ilya.data.UsersRepository
+import com.ilya.data.error.UsersDataError
+import com.ilya.data.models.UserData
+import com.ilya.loginandregistration.registration.domain.error.RegistrationDomainError
+import com.ilya.loginandregistration.registration.domain.models.NewUserData
 import javax.inject.Inject
 
 class RegisterNewUserUseCase @Inject constructor(
-    private val userAdder: UserAdder
-){
-    operator fun invoke(newUser: DataOfNewUser) {
-        userAdder.addNewUser(UserData(newUser.name, newUser.login, newUser.password))
+    private val usersRepository: UsersRepository
+): UseCase<Unit> {
+    
+    override operator fun invoke(data: Any): Result<Unit> {
+        val newUserData = data as? NewUserData ?:
+            return Result.failure(RegistrationDomainError.IllegalRegistrationArgument)
+        
+        return usersRepository.add(UserData(newUserData.name, newUserData.login, newUserData.password)).fold(
+            onSuccess = { Result.success(Unit) },
+            onFailure = {
+                when(it) {
+                    is UsersDataError.AlreadyExist -> Result.failure(RegistrationDomainError.LoginAlreadyUsed)
+                    else -> Result.failure(RegistrationDomainError.UnknownError)
+                }
+            }
+        )
     }
 }
