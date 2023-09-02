@@ -39,11 +39,11 @@ class GreetingViewModel @Inject constructor(
         if (getOrCreateState().user == null) {
             findUserUseCase(userLogin)
                 .onSuccess {
-                    _stateLiveData.value = getOrCreateState().copy(user = it)
-                    _stateLiveData.value =
-                        getOrCreateState().copy(
-                            greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(it.name))
-                        )
+                    _stateLiveData.value = getOrCreateState().copy(
+                        user = it,
+                        greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(it.name))
+                    )
+                    
                 }
                 .onFailure { backToLogin() }
         } else {

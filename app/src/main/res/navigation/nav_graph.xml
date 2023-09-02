@@ -15,8 +15,8 @@
             app:destination="@id/greetingFragment">
             <argument
                 android:name="userLogin"
-                app:argType="string"
-                android:defaultValue="a" />
+                android:defaultValue="a"
+                app:argType="string" />
         </action>
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
@@ -29,8 +29,11 @@
         tools:layout="@layout/fragment_greeting">
         <action
             android:id="@+id/action_greetingFragment_to_loginFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"
             app:destination="@id/loginFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.ilya.loginandregistration.registration.presentation.RegistrationFragment"
@@ -38,7 +41,10 @@
         tools:layout="@layout/fragment_registration">
         <action
             android:id="@+id/action_registrationFragment_to_loginFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"
             app:destination="@id/loginFragment" />
     </fragment>
+
 
 </navigation>

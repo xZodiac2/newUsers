@@ -1,5 +1,6 @@
 package com.ilya.loginandregistration.registration.presentation.veiwModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,34 +44,48 @@ class RegistrationViewModel @Inject constructor(
         if (inputFieldsIsCorrect) {
             val newUserData = NewUserData(inputFieldValues.name, inputFieldValues.login, inputFieldValues.password.computedMD5Hash())
             
-            var isUserRegisteredSuccessfully = false
             registerNewUserUseCase(newUserData)
-                .onSuccess { isUserRegisteredSuccessfully = true }
-                .onFailure {
-                    when (it) {
+                .onSuccess {
+                    _stateLiveData.value = getOrCreateState().copy(isUserSuccessfullyRegistered = true)
+                    registrationFragmentRouter.backToLogin()
+                }
+                .onFailure { error ->
+                    error as RegistrationDomainError
+                    
+                    when (error) {
                         is RegistrationDomainError.LoginAlreadyUsed -> {
-                            val state = getOrCreateState()
-                            
-                            _stateLiveData.value = state.copy(
-                                validationResult = state.validationResult.copy(
+                            _stateLiveData.value = getOrCreateState().copy(
+                                isUserSuccessfullyRegistered = false,
+                                validationResult = validationResult.copy(
                                     login = listOf(RegistrationPresentationError.LoginAlreadyUsed)
                                 )
                             )
                         }
+    
+                        is RegistrationDomainError.IllegalRegistrationArgument -> {
+                            Log.d("msg", "Expected argument with type NewUserData")
+                            _stateLiveData.value = getOrCreateState().copy(isUserSuccessfullyRegistered = false)
+                        }
+                        
+                        is RegistrationDomainError.UnknownError -> {
+                            _stateLiveData.value = getOrCreateState().copy(
+                                registrationError = RegistrationPresentationError.UnknownError,
+                                isUserSuccessfullyRegistered = false
+                            )
+                        }
                     }
                 }
-            
-            _stateLiveData.value = getOrCreateState().copy(isUserSuccessfullyRegistered = isUserRegisteredSuccessfully)
-            
-            if (isUserRegisteredSuccessfully) registrationFragmentRouter.backToLogin()
-    
         } else {
             _stateLiveData.value = getOrCreateState().copy(validationResult = validationResult)
         }
     }
     
     private fun getOrCreateState(): RegistrationViewState {
-        return _stateLiveData.value ?: RegistrationViewState(ValidationResult(null, null, null, null), false)
+        return _stateLiveData.value ?: RegistrationViewState(
+            validationResult = ValidationResult(null, null, null, null),
+            registrationError = null,
+            isUserSuccessfullyRegistered = false
+        )
     }
     
     private fun inputFieldsIsCorrect(validationResult: ValidationResult): Boolean {
@@ -86,32 +101,27 @@ class RegistrationViewModel @Inject constructor(
         val nameValidation = ValidateInputFieldUseCase(IsEmptyValidator())
         val loginValidation = ValidateInputFieldUseCase(
             IsEmptyValidator(),
-            LengthValidator(NecessaryLength.Login()),
+            LengthValidator(NecessaryLength.Login(NECESSARY_LOGIN_LENGTH)),
             IllegalCharactersValidator("""\W""".toRegex())
         )
-        val passwordValidation = ValidateInputFieldUseCase(LengthValidator(NecessaryLength.Password()))
+        val passwordValidation = ValidateInputFieldUseCase(LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)))
         val repeatedPasswordValidation = ValidateInputFieldUseCase(
-            LengthValidator(NecessaryLength.Password()),
+            LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)),
             FieldsMatchValidator(password)
         )
         
         return ValidationResult(
-            name = nameValidation(name).fold(
-                onSuccess = { null },
-                onFailure = { mapErrorList((it as ErrorListWrapper).errorList) }
-            ),
-            login = loginValidation(login).fold(
-                onSuccess = { null },
-                onFailure = { mapErrorList((it as ErrorListWrapper).errorList) }
-            ),
-            password = passwordValidation(password).fold(
-                onSuccess = { null },
-                onFailure = { mapErrorList((it as ErrorListWrapper).errorList) }
-            ),
-            repeatedPassword = repeatedPasswordValidation(repeatedPassword).fold(
-                onSuccess = { null },
-                onFailure = { mapErrorList((it as ErrorListWrapper).errorList) }
-            )
+            name = nameValidation(name).defineValidationResult(),
+            login = loginValidation(login).defineValidationResult(),
+            password = passwordValidation(password).defineValidationResult(),
+            repeatedPassword = repeatedPasswordValidation(repeatedPassword).defineValidationResult()
+        )
+    }
+    
+    private fun Result<Unit>.defineValidationResult(): PresentationErrorList? {
+        return this.fold(
+            onSuccess = { null },
+            onFailure = { mapErrorList((it as ErrorListWrapper).errorList) }
         )
     }
     
@@ -123,12 +133,16 @@ class RegistrationViewModel @Inject constructor(
         return when (error) {
             is RegistrationValidationError.LengthError.Login -> RegistrationPresentationError.LengthError.Login
             is RegistrationValidationError.LengthError.Password -> RegistrationPresentationError.LengthError.Password
-            is RegistrationValidationError.LoginAlreadyUsed -> RegistrationPresentationError.LoginAlreadyUsed
             is RegistrationValidationError.IllegalCharacter -> RegistrationPresentationError.IllegalCharacter
             is RegistrationValidationError.FieldsDoNotMatch -> RegistrationPresentationError.FieldsDoNotMatch
             is RegistrationValidationError.FieldIsEmpty -> RegistrationPresentationError.FieldIsEmpty
             null -> null
         }
+    }
+    
+    companion object {
+        const val NECESSARY_LOGIN_LENGTH = 3
+        const val NECESSARY_PASSWORD_LENGTH = 8
     }
     
 }

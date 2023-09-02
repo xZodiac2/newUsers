@@ -13,11 +13,12 @@
     <string name="text_registration_hint_repeated_password_input">Повторите пароль</string>
     <string name="text_registration_button_register">Зарегистрироваться</string>
     <string name="text_registration_fields_do_not_match_error">- Пароли не совпадают</string>
-    <string name="text_registration_password_is_small_error">- Минимальная длина пароля 8 символов</string>
+    <string name="text_registration_password_is_small_error">- Минимальная длина пароля %d символов</string>
     <string name="text_registration_empty_field_error">- Это поле не может быть пустым</string>
     <string name="text_registration_user_added_successfully">Вы успешно зарегистрированны</string>
     <string name="text_registration_login_is_already_used">- Этот логин уже используется. Выберите другой логин</string>
     <string name="text_registration_illegal_characters_error">- Это поле не может содержать специальные символы</string>
-    <string name="text_registration_login_is_short">- Минимальная длина логина 3 символа</string>
+    <string name="text_registration_login_is_short">- Минимальная длина логина %d символа</string>
     <string name="text_login_error_unknown">Неизвестная ошибка</string>
+    <string name="text_registration_error_unknown">Произошла неизвестная ошибка. Повторите попытку позже</string>
 </resources>

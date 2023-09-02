@@ -13,11 +13,12 @@
     <string name="text_registration_hint_repeated_password_input">Repeat password</string>
     <string name="text_registration_button_register">Register</string>
     <string name="text_registration_fields_do_not_match_error">- Passwords do not match</string>
-    <string name="text_registration_password_is_small_error">- Minimum password length is 8 characters</string>
+    <string name="text_registration_password_is_small_error">- Minimum password length is %d characters</string>
     <string name="text_registration_empty_field_error">- This field can not be empty</string>
     <string name="text_registration_user_added_successfully">You successfully registered</string>
     <string name="text_registration_login_is_already_used">- This login is already used. Choose other login</string>
     <string name="text_registration_illegal_characters_error">- This field cannot contains special characters</string>
-    <string name="text_registration_login_is_short">- Minimum login length is 3 characters</string>
+    <string name="text_registration_login_is_short">- Minimum login length is %d characters</string>
     <string name="text_login_error_unknown">Unknown error</string>
+    <string name="text_registration_error_unknown">Went unknown error. Try again later</string>
 </resources>

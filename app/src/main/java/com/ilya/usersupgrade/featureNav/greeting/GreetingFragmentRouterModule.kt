@@ -9,5 +9,6 @@ import dagger.hilt.android.components.ActivityComponent
 @Module
 @InstallIn(ActivityComponent::class)
 interface GreetingFragmentRouterModule {
-    @Binds fun bindGreetingFragmentRouterImpl(greetingFragmentRouterImpl: GreetingFragmentRouterImpl): GreetingFragmentRouter
+    @Binds
+    fun bindGreetingFragmentRouterImpl(greetingFragmentRouterImpl: GreetingFragmentRouterImpl): GreetingFragmentRouter
 }

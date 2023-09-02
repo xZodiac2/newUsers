@@ -29,14 +29,18 @@ class LoginViewModel @Inject constructor(
         findUserUseCase(loginParams)
             .onSuccess { loginFragmentRouter.goToGreeting(it.login) }
             .onFailure { error ->
+                error as LoginDomainError
+                
                 when (error) {
-                    is LoginDomainError.WrongLoginOrPassword ->
+                    is LoginDomainError.WrongLoginOrPassword -> {
                         _stateLiveData.value = getOrCreateState().copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
-                    
-                    is LoginDomainError.UnknownError ->
+                    }
+                    is LoginDomainError.UnknownError -> {
                         _stateLiveData.value = getOrCreateState().copy(loginError = LoginPresentationError.UnknownError)
-                    
-                    is LoginDomainError.WrongLoginArgument -> Log.e("msg", "Expected argument with type UserLoginParams")
+                    }
+                    is LoginDomainError.WrongLoginArgument -> {
+                        Log.e("msg", "Expected argument with type UserLoginParams")
+                    }
                 }
             }
     }

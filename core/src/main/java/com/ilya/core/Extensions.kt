@@ -7,12 +7,10 @@ import java.security.MessageDigest
 
 fun String.computedMD5Hash(): String {
     val digested = MessageDigest.getInstance("MD5").digest(this.toByteArray())
-    val stringBuilder = StringBuilder()
-    
-    digested.forEach { byte -> stringBuilder.append(String.format("%02x", byte)) }
-    
-    return stringBuilder.toString()
+    return digested.toHexString()
 }
+
+fun ByteArray.toHexString(): String = joinToString("") { "%02x".format(it) }
 
 fun Context.getStringByReference(textReference: TextReference): String {
     return when(textReference) {

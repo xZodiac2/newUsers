@@ -14,6 +14,5 @@ sealed class RegistrationValidationError : ValidationError() {
     object FieldIsEmpty : RegistrationValidationError()
     object IllegalCharacter : RegistrationValidationError()
     object FieldsDoNotMatch : RegistrationValidationError()
-    object LoginAlreadyUsed : RegistrationValidationError()
     
 }

@@ -9,5 +9,6 @@ import dagger.hilt.android.components.ActivityComponent
 @Module
 @InstallIn(ActivityComponent::class)
 interface LoginFragmentRouterModule {
-    @Binds fun bindLoginFragmentRouterImpl(loginFragmentRouterImpl: LoginFragmentRouterImpl): LoginFragmentRouter
+    @Binds
+    fun bindLoginFragmentRouterImpl(loginFragmentRouterImpl: LoginFragmentRouterImpl): LoginFragmentRouter
 }
