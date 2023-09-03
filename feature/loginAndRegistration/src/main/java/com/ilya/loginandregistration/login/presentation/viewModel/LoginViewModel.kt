@@ -39,6 +39,7 @@ class LoginViewModel @Inject constructor(
                         _stateLiveData.value = getOrCreateState().copy(loginError = LoginPresentationError.UnknownError)
                     }
                     is LoginDomainError.WrongLoginArgument -> {
+                        _stateLiveData.value = getOrCreateState().copy(loginError = LoginPresentationError.SomethingWentWrong)
                         Log.e("msg", "Expected argument with type UserLoginParams")
                     }
                 }

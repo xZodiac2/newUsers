@@ -21,4 +21,5 @@
     <string name="text_registration_login_is_short">- Minimum login length is %d characters</string>
     <string name="text_login_error_unknown">Unknown error</string>
     <string name="text_registration_error_unknown">Went unknown error. Try again later</string>
+    <string name="text_login_error_something_went_wrong">Something went wrong. Try again later</string>
 </resources>
