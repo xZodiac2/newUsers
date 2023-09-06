@@ -1,5 +1,5 @@
 package com.ilya.core.storage
 
 interface Removable<in T> {
-    fun remove(willRemove: T): Result<Unit>
+    suspend fun remove(willRemove: T): Result<Unit>
 }

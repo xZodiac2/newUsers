@@ -22,4 +22,11 @@
         android:layout_marginTop="48dp"
         android:text="@string/text_greeting_btn_logout" />
 
+    <ProgressBar
+        android:layout_marginTop="200dp"
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle" />
+
 </LinearLayout>

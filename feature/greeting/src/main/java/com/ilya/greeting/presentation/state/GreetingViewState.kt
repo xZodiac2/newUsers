@@ -7,4 +7,6 @@ import com.ilya.greeting.domain.models.GreetingUserData
 data class GreetingViewState(
     val greetingTextReference: TextReference,
     val user: GreetingUserData? = null,
+    val contentVisibility: Int,
+    val progressBarVisibility: Int
 )

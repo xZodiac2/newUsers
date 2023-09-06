@@ -6,6 +6,8 @@ import com.ilya.loginandregistration.databinding.FragmentLoginBinding
 import com.ilya.loginandregistration.login.domain.models.UserLoginParams
 import com.ilya.loginandregistration.login.presentation.callback.LoginViewCallback
 import com.ilya.loginandregistration.login.presentation.state.LoginViewState
+import hilt_aggregated_deps._com_ilya_loginandregistration_login_presentation_LoginFragment_GeneratedInjector
+import kotlin.math.log
 
 class LoginView(
     private val binding: FragmentLoginBinding,
@@ -21,10 +23,12 @@ class LoginView(
         btnOfferToRegister.setOnClickListener { callback.onOfferToRegisterClick() }
     }
     
-    fun bind(loginViewState: LoginViewState?) {
+    fun bind(loginViewState: LoginViewState?) = with(binding) {
         loginViewState ?: return
         
-        binding.tvError.setTextByReference(loginViewState.loginError?.textReference)
+        tvError.setTextByReference(loginViewState.loginError?.textReference)
+        progressBar.visibility = loginViewState.progressBarVisibility
+        btnLogin.visibility = loginViewState.buttonVisibility
     }
     
 }

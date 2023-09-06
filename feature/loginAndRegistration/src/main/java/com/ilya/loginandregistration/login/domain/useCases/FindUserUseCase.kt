@@ -1,6 +1,7 @@
 package com.ilya.loginandregistration.login.domain.useCases
 
-import com.ilya.core.UseCase
+import android.view.View
+import com.ilya.core.useCase.CoroutineUseCase
 import com.ilya.data.UsersRepository
 import com.ilya.data.error.UsersDataError
 import com.ilya.loginandregistration.login.domain.error.LoginDomainError
@@ -10,9 +11,9 @@ import javax.inject.Inject
 
 class FindUserUseCase @Inject constructor(
     private val usersRepository: UsersRepository,
-) : UseCase<LoggedInUserData> {
+) : CoroutineUseCase<LoggedInUserData> {
     
-    override operator fun invoke(data: Any): Result<LoggedInUserData> {
+    override suspend fun execute(data: Any): Result<LoggedInUserData> {
         val loginParams = data as? UserLoginParams ?: return Result.failure(LoginDomainError.WrongLoginArgument)
         
         return usersRepository.searchByLogin(loginParams.login)

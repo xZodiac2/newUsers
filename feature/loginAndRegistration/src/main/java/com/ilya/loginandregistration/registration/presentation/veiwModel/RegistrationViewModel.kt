@@ -1,9 +1,11 @@
 package com.ilya.loginandregistration.registration.presentation.veiwModel
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ilya.core.computedMD5Hash
 import com.ilya.loginandregistration.registration.domain.error.ErrorList
 import com.ilya.loginandregistration.registration.domain.error.RegistrationDomainError
@@ -25,6 +27,9 @@ import com.ilya.loginandregistration.registration.presentation.models.Validation
 import com.ilya.loginandregistration.registration.presentation.navigation.RegistrationFragmentRouter
 import com.ilya.loginandregistration.registration.presentation.state.RegistrationViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,14 +42,16 @@ class RegistrationViewModel @Inject constructor(
     
     lateinit var registrationFragmentRouter: RegistrationFragmentRouter
     
-    override fun onRegisterClick(inputFieldValues: InputFieldValues) {
+    override fun onRegisterClick(inputFieldValues: InputFieldValues) = viewModelScope.launch {
         val validationResult = getValidationResult(inputFieldValues)
         val inputFieldsIsCorrect = inputFieldsIsCorrect(validationResult)
         
         if (inputFieldsIsCorrect) {
             val newUserData = NewUserData(inputFieldValues.name, inputFieldValues.login, inputFieldValues.password.computedMD5Hash())
             
-            registerNewUserUseCase(newUserData)
+            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = View.GONE, progressBarVisibility = View.VISIBLE)
+            
+            registerUser(newUserData)
                 .onSuccess {
                     _stateLiveData.value = getOrCreateState().copy(isUserSuccessfullyRegistered = true)
                     registrationFragmentRouter.backToLogin()
@@ -61,7 +68,7 @@ class RegistrationViewModel @Inject constructor(
                                 )
                             )
                         }
-    
+                        
                         is RegistrationDomainError.IllegalRegistrationArgument -> {
                             Log.d("msg", "Expected argument with type NewUserData")
                             _stateLiveData.value = getOrCreateState().copy(isUserSuccessfullyRegistered = false)
@@ -75,16 +82,25 @@ class RegistrationViewModel @Inject constructor(
                         }
                     }
                 }
+            
+            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = View.VISIBLE, progressBarVisibility = View.GONE)
+            
         } else {
             _stateLiveData.value = getOrCreateState().copy(validationResult = validationResult)
         }
+    }
+    
+    private suspend fun registerUser(newUserData: NewUserData): Result<Unit> = withContext(Dispatchers.IO) {
+        return@withContext registerNewUserUseCase.execute(newUserData)
     }
     
     private fun getOrCreateState(): RegistrationViewState {
         return _stateLiveData.value ?: RegistrationViewState(
             validationResult = ValidationResult(null, null, null, null),
             registrationError = null,
-            isUserSuccessfullyRegistered = false
+            isUserSuccessfullyRegistered = false,
+            buttonVisibility = View.VISIBLE,
+            progressBarVisibility = View.GONE
         )
     }
     
@@ -104,7 +120,8 @@ class RegistrationViewModel @Inject constructor(
             LengthValidator(NecessaryLength.Login(NECESSARY_LOGIN_LENGTH)),
             IllegalCharactersValidator("""\W""".toRegex())
         )
-        val passwordValidation = ValidateInputFieldUseCase(LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)))
+        val passwordValidation =
+            ValidateInputFieldUseCase(LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)))
         val repeatedPasswordValidation = ValidateInputFieldUseCase(
             LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)),
             FieldsMatchValidator(password)

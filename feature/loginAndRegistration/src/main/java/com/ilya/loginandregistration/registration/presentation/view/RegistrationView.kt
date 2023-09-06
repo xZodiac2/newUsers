@@ -41,6 +41,9 @@ class RegistrationView(
         bindErrorList(passwordInputLayout, registrationViewState.validationResult.password)
         bindErrorList(repeatedPasswordInputLayout, registrationViewState.validationResult.repeatedPassword)
         
+        btnRegister.visibility = registrationViewState.buttonVisibility
+        progressBar.visibility = registrationViewState.progressBarVisibility
+        
         if (registrationViewState.isUserSuccessfullyRegistered) {
             Toast.makeText(etName.context, R.string.text_registration_user_added_successfully, Toast.LENGTH_SHORT).show()
         }

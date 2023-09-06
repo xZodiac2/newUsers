@@ -7,4 +7,6 @@ data class RegistrationViewState(
     val validationResult: ValidationResult,
     val registrationError: RegistrationPresentationError?,
     val isUserSuccessfullyRegistered: Boolean,
+    val buttonVisibility: Int,
+    val progressBarVisibility: Int
 )

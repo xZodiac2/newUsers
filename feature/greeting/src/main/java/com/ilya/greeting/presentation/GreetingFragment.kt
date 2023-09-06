@@ -40,7 +40,7 @@ class GreetingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        greetingViewModel.findUser(requireArguments())
+        greetingViewModel.getUser(requireArguments())
     }
     
 }
