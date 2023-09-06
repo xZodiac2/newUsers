@@ -1,7 +1,6 @@
 package com.ilya.greeting.domain.useCases
 
 import com.ilya.core.useCase.CoroutineUseCase
-import com.ilya.core.useCase.OrdinaryUseCase
 import com.ilya.data.UsersRepository
 import com.ilya.data.error.UsersDataError
 import com.ilya.greeting.domain.error.GreetingDomainError

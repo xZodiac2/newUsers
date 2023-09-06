@@ -6,8 +6,6 @@ import com.ilya.loginandregistration.databinding.FragmentLoginBinding
 import com.ilya.loginandregistration.login.domain.models.UserLoginParams
 import com.ilya.loginandregistration.login.presentation.callback.LoginViewCallback
 import com.ilya.loginandregistration.login.presentation.state.LoginViewState
-import hilt_aggregated_deps._com_ilya_loginandregistration_login_presentation_LoginFragment_GeneratedInjector
-import kotlin.math.log
 
 class LoginView(
     private val binding: FragmentLoginBinding,

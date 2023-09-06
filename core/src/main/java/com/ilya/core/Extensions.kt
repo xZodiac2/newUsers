@@ -2,7 +2,6 @@ package com.ilya.core
 
 import android.content.Context
 import android.widget.TextView
-import com.google.android.material.textfield.TextInputLayout
 import java.security.MessageDigest
 
 fun String.computedMD5Hash(): String {

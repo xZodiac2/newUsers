@@ -1,13 +1,11 @@
 package com.ilya.greeting.presentation.view
 
-import android.util.Log
 import androidx.core.view.iterator
 import com.ilya.core.setTextByReference
 import com.ilya.greeting.R
 import com.ilya.greeting.databinding.FragmentGreetingBinding
 import com.ilya.greeting.presentation.callback.GreetingViewCallback
 import com.ilya.greeting.presentation.state.GreetingViewState
-import java.util.MissingFormatArgumentException
 
 class GreetingView(
     private val binding: FragmentGreetingBinding,

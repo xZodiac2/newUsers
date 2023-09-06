@@ -1,6 +1,5 @@
 package com.ilya.loginandregistration.login.domain.useCases
 
-import android.view.View
 import com.ilya.core.useCase.CoroutineUseCase
 import com.ilya.data.UsersRepository
 import com.ilya.data.error.UsersDataError

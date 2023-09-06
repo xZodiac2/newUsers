@@ -16,7 +16,6 @@ import com.ilya.loginandregistration.login.presentation.navigation.LoginFragment
 import com.ilya.loginandregistration.login.presentation.state.LoginViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
