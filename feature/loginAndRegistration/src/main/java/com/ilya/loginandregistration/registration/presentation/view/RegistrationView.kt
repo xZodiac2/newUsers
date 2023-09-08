@@ -4,6 +4,7 @@ import android.text.InputFilter.LengthFilter
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
 import com.ilya.core.getStringByReference
+import com.ilya.core.setViewVisibility
 import com.ilya.loginandregistration.R
 import com.ilya.loginandregistration.databinding.FragmentRegistrationBinding
 import com.ilya.loginandregistration.registration.presentation.callback.RegistrationViewCallback
@@ -41,8 +42,8 @@ class RegistrationView(
         bindErrorList(passwordInputLayout, registrationViewState.validationResult.password)
         bindErrorList(repeatedPasswordInputLayout, registrationViewState.validationResult.repeatedPassword)
         
-        btnRegister.visibility = registrationViewState.buttonVisibility
-        progressBar.visibility = registrationViewState.progressBarVisibility
+        btnRegister.setViewVisibility(registrationViewState.buttonVisibility)
+        progressBar.setViewVisibility(registrationViewState.progressBarVisibility)
         
         if (registrationViewState.isUserSuccessfullyRegistered) {
             Toast.makeText(etName.context, R.string.text_registration_user_added_successfully, Toast.LENGTH_SHORT).show()

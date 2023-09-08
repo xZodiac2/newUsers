@@ -1,12 +1,12 @@
 package com.ilya.loginandregistration.registration.presentation.veiwModel
 
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.computedMD5Hash
+import com.ilya.core.enums.ViewVisibility
 import com.ilya.loginandregistration.registration.domain.error.ErrorList
 import com.ilya.loginandregistration.registration.domain.error.RegistrationDomainError
 import com.ilya.loginandregistration.registration.domain.error.RegistrationValidationError
@@ -49,7 +49,7 @@ class RegistrationViewModel @Inject constructor(
         if (inputFieldsIsCorrect) {
             val newUserData = NewUserData(inputFieldValues.name, inputFieldValues.login, inputFieldValues.password.computedMD5Hash())
             
-            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = View.GONE, progressBarVisibility = View.VISIBLE)
+            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = ViewVisibility.GONE, progressBarVisibility = ViewVisibility.VISIBLE)
             
             registerUser(newUserData)
                 .onSuccess {
@@ -83,7 +83,7 @@ class RegistrationViewModel @Inject constructor(
                     }
                 }
             
-            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = View.VISIBLE, progressBarVisibility = View.GONE)
+            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = ViewVisibility.VISIBLE, progressBarVisibility = ViewVisibility.GONE)
             
         } else {
             _stateLiveData.value = getOrCreateState().copy(validationResult = validationResult)
@@ -99,8 +99,8 @@ class RegistrationViewModel @Inject constructor(
             validationResult = ValidationResult(null, null, null, null),
             registrationError = null,
             isUserSuccessfullyRegistered = false,
-            buttonVisibility = View.VISIBLE,
-            progressBarVisibility = View.GONE
+            buttonVisibility = ViewVisibility.VISIBLE,
+            progressBarVisibility = ViewVisibility.GONE
         )
     }
     

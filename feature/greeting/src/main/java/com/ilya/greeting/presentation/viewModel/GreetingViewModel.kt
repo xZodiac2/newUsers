@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.TextReference
+import com.ilya.core.enums.ViewVisibility
 import com.ilya.greeting.R
 import com.ilya.greeting.domain.models.GreetingUserData
 import com.ilya.greeting.domain.useCases.FindUserUseCase
@@ -43,7 +44,7 @@ class GreetingViewModel @Inject constructor(
         }
         
         if (getOrCreateState().user == null) {
-            _stateLiveData.value = getOrCreateState().copy(contentVisibility = View.GONE, progressBarVisibility = View.VISIBLE)
+            _stateLiveData.value = getOrCreateState().copy(contentVisibility = ViewVisibility.GONE, progressBarVisibility = ViewVisibility.VISIBLE)
             
             findUser(userLogin)
                 .onSuccess {
@@ -62,7 +63,7 @@ class GreetingViewModel @Inject constructor(
         }
         
         
-        _stateLiveData.value = getOrCreateState().copy(contentVisibility = View.VISIBLE, progressBarVisibility = View.GONE)
+        _stateLiveData.value = getOrCreateState().copy(contentVisibility = ViewVisibility.VISIBLE, progressBarVisibility = ViewVisibility.GONE)
     }
     
     private suspend fun findUser(userLogin: String): Result<GreetingUserData> = withContext(Dispatchers.IO) {
@@ -72,8 +73,8 @@ class GreetingViewModel @Inject constructor(
     private fun getOrCreateState(): GreetingViewState {
         return stateLiveData.value ?: GreetingViewState(
             greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf("")),
-            contentVisibility = View.GONE,
-            progressBarVisibility = View.VISIBLE
+            contentVisibility = ViewVisibility.GONE,
+            progressBarVisibility = ViewVisibility.VISIBLE
         )
     }
     

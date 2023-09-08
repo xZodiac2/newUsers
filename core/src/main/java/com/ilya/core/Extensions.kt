@@ -1,7 +1,9 @@
 package com.ilya.core
 
 import android.content.Context
+import android.view.View
 import android.widget.TextView
+import com.ilya.core.enums.ViewVisibility
 import java.security.MessageDigest
 
 fun String.computedMD5Hash(): String {
@@ -21,4 +23,8 @@ fun Context.getStringByReference(textReference: TextReference): String {
 
 fun TextView.setTextByReference(textReference: TextReference?) {
     text = if (textReference == null) null else context.getStringByReference(textReference)
+}
+
+fun View.setViewVisibility(visibility: ViewVisibility) {
+    this.visibility = visibility.value
 }

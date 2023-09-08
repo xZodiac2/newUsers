@@ -1,5 +1,6 @@
 package com.ilya.loginandregistration.registration.presentation.state
 
+import com.ilya.core.enums.ViewVisibility
 import com.ilya.loginandregistration.registration.presentation.error.RegistrationPresentationError
 import com.ilya.loginandregistration.registration.presentation.models.ValidationResult
 
@@ -7,6 +8,6 @@ data class RegistrationViewState(
     val validationResult: ValidationResult,
     val registrationError: RegistrationPresentationError?,
     val isUserSuccessfullyRegistered: Boolean,
-    val buttonVisibility: Int,
-    val progressBarVisibility: Int
+    val buttonVisibility: ViewVisibility,
+    val progressBarVisibility: ViewVisibility
 )
