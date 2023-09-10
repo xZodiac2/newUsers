@@ -1,6 +1,6 @@
 package com.ilya.loginandregistration.registration.domain.useCases
 
-import com.ilya.core.useCase.CoroutineUseCase
+import com.ilya.core.UseCase
 import com.ilya.data.UsersRepository
 import com.ilya.data.error.UsersDataError
 import com.ilya.data.models.UserData
@@ -10,10 +10,11 @@ import javax.inject.Inject
 
 class RegisterNewUserUseCase @Inject constructor(
     private val usersRepository: UsersRepository,
-) : CoroutineUseCase<Unit> {
+) : UseCase<Unit> {
     
     override suspend fun execute(data: Any): Result<Unit> {
-        val newUserData = data as? NewUserData ?: return Result.failure(RegistrationDomainError.IllegalRegistrationArgument)
+        val newUserData =
+            data as? NewUserData ?: return Result.failure(RegistrationDomainError.IllegalRegistrationArgument)
         
         return usersRepository.add(UserData(newUserData.name, newUserData.login, newUserData.passwordHash))
             .fold(

@@ -22,7 +22,8 @@ class RegistrationFragment : Fragment() {
     
     private val registrationViewModel: RegistrationViewModel by viewModels()
     
-    @Inject lateinit var registrationFragmentRouter: RegistrationFragmentRouter
+    @Inject
+    lateinit var registrationFragmentRouter: RegistrationFragmentRouter
     
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -34,6 +35,7 @@ class RegistrationFragment : Fragment() {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false)
         view = RegistrationView(binding, registrationViewModel)
         registrationViewModel.stateLiveData.observe(viewLifecycleOwner, view::bind)
+        registrationViewModel.userRegistrationStatusLiveData.observe(viewLifecycleOwner, view::bindRegistrationStatus)
         return binding.root
     }
     

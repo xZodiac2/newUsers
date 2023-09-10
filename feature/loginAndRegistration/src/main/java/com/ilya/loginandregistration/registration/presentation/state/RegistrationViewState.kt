@@ -7,7 +7,6 @@ import com.ilya.loginandregistration.registration.presentation.models.Validation
 data class RegistrationViewState(
     val validationResult: ValidationResult,
     val registrationError: RegistrationPresentationError?,
-    val isUserSuccessfullyRegistered: Boolean,
     val buttonVisibility: ViewVisibility,
-    val progressBarVisibility: ViewVisibility
+    val progressBarVisibility: ViewVisibility,
 )

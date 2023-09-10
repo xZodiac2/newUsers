@@ -1,7 +1,6 @@
 package com.ilya.greeting.presentation.viewModel
 
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,6 +35,7 @@ class GreetingViewModel @Inject constructor(
     }
     
     fun getUser(args: Bundle) = viewModelScope.launch {
+        val state = getOrCreateState()
         val userLogin = args.getString(KEY_USER_LOGIN)
         
         if (userLogin == null) {
@@ -43,12 +43,15 @@ class GreetingViewModel @Inject constructor(
             return@launch
         }
         
-        if (getOrCreateState().user == null) {
-            _stateLiveData.value = getOrCreateState().copy(contentVisibility = ViewVisibility.GONE, progressBarVisibility = ViewVisibility.VISIBLE)
+        if (state.user == null) {
+            _stateLiveData.value = state.copy(
+                userNameVisibility = ViewVisibility.GONE,
+                progressBarVisibility = ViewVisibility.VISIBLE
+            )
             
             findUser(userLogin)
                 .onSuccess {
-                    _stateLiveData.value = getOrCreateState().copy(
+                    _stateLiveData.value = state.copy(
                         user = it,
                         greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(it.name))
                     )
@@ -56,14 +59,19 @@ class GreetingViewModel @Inject constructor(
                 }
                 .onFailure { backToLogin() }
         } else {
-            val state = getOrCreateState()
             _stateLiveData.value = state.copy(
-                greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(state.user?.name.toString()))
+                greetingTextReference = TextReference.Resource(
+                    R.string.text_greeting,
+                    listOf(state.user.name)
+                )
             )
         }
         
         
-        _stateLiveData.value = getOrCreateState().copy(contentVisibility = ViewVisibility.VISIBLE, progressBarVisibility = ViewVisibility.GONE)
+        _stateLiveData.value = getOrCreateState().copy(
+            userNameVisibility = ViewVisibility.VISIBLE,
+            progressBarVisibility = ViewVisibility.GONE
+        )
     }
     
     private suspend fun findUser(userLogin: String): Result<GreetingUserData> = withContext(Dispatchers.IO) {
@@ -73,7 +81,7 @@ class GreetingViewModel @Inject constructor(
     private fun getOrCreateState(): GreetingViewState {
         return stateLiveData.value ?: GreetingViewState(
             greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf("")),
-            contentVisibility = ViewVisibility.GONE,
+            userNameVisibility = ViewVisibility.GONE,
             progressBarVisibility = ViewVisibility.VISIBLE
         )
     }

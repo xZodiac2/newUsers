@@ -40,53 +40,69 @@ class RegistrationViewModel @Inject constructor(
     private val _stateLiveData: MutableLiveData<RegistrationViewState> = MutableLiveData()
     val stateLiveData: LiveData<RegistrationViewState> = _stateLiveData
     
+    private val _userRegistrationStatusLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
+    val userRegistrationStatusLiveData: LiveData<Boolean> = _userRegistrationStatusLiveData
+    
     lateinit var registrationFragmentRouter: RegistrationFragmentRouter
     
-    override fun onRegisterClick(inputFieldValues: InputFieldValues) = viewModelScope.launch {
-        val validationResult = getValidationResult(inputFieldValues)
-        val inputFieldsIsCorrect = inputFieldsIsCorrect(validationResult)
-        
-        if (inputFieldsIsCorrect) {
-            val newUserData = NewUserData(inputFieldValues.name, inputFieldValues.login, inputFieldValues.password.computedMD5Hash())
+    override fun onRegisterClick(inputFieldValues: InputFieldValues) {
+        viewModelScope.launch {
+            val validationResult = getValidationResult(inputFieldValues)
+            val inputFieldsIsCorrect = inputFieldsIsCorrect(validationResult)
             
-            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = ViewVisibility.GONE, progressBarVisibility = ViewVisibility.VISIBLE)
-            
-            registerUser(newUserData)
-                .onSuccess {
-                    _stateLiveData.value = getOrCreateState().copy(isUserSuccessfullyRegistered = true)
-                    registrationFragmentRouter.backToLogin()
-                }
-                .onFailure { error ->
-                    error as RegistrationDomainError
-                    
-                    when (error) {
-                        is RegistrationDomainError.LoginAlreadyUsed -> {
-                            _stateLiveData.value = getOrCreateState().copy(
-                                isUserSuccessfullyRegistered = false,
-                                validationResult = validationResult.copy(
-                                    login = listOf(RegistrationPresentationError.LoginAlreadyUsed)
+            if (inputFieldsIsCorrect) {
+                val newUserData =
+                    NewUserData(
+                        inputFieldValues.name,
+                        inputFieldValues.login,
+                        inputFieldValues.password.computedMD5Hash()
+                    )
+                
+                _stateLiveData.value = getOrCreateState().copy(
+                    buttonVisibility = ViewVisibility.GONE,
+                    progressBarVisibility = ViewVisibility.VISIBLE
+                )
+                
+                registerUser(newUserData)
+                    .onSuccess {
+                        _userRegistrationStatusLiveData.value = true
+                        registrationFragmentRouter.backToLogin()
+                    }
+                    .onFailure { error ->
+                        error as RegistrationDomainError
+                        
+                        when (error) {
+                            is RegistrationDomainError.LoginAlreadyUsed -> {
+                                _stateLiveData.value = getOrCreateState().copy(
+                                    validationResult = validationResult.copy(
+                                        login = listOf(RegistrationPresentationError.LoginAlreadyUsed)
+                                    )
                                 )
-                            )
-                        }
-                        
-                        is RegistrationDomainError.IllegalRegistrationArgument -> {
-                            Log.d("msg", "Expected argument with type NewUserData")
-                            _stateLiveData.value = getOrCreateState().copy(isUserSuccessfullyRegistered = false)
-                        }
-                        
-                        is RegistrationDomainError.UnknownError -> {
-                            _stateLiveData.value = getOrCreateState().copy(
-                                registrationError = RegistrationPresentationError.UnknownError,
-                                isUserSuccessfullyRegistered = false
-                            )
+                                _userRegistrationStatusLiveData.value = false
+                            }
+                            
+                            is RegistrationDomainError.IllegalRegistrationArgument -> {
+                                Log.d("msg", "Expected argument with type NewUserData")
+                                _userRegistrationStatusLiveData.value = false
+                            }
+                            
+                            is RegistrationDomainError.UnknownError -> {
+                                _stateLiveData.value = getOrCreateState().copy(
+                                    registrationError = RegistrationPresentationError.UnknownError,
+                                )
+                                _userRegistrationStatusLiveData.value = false
+                            }
                         }
                     }
-                }
-            
-            _stateLiveData.value = getOrCreateState().copy(buttonVisibility = ViewVisibility.VISIBLE, progressBarVisibility = ViewVisibility.GONE)
-            
-        } else {
-            _stateLiveData.value = getOrCreateState().copy(validationResult = validationResult)
+                
+                _stateLiveData.value = getOrCreateState().copy(
+                    buttonVisibility = ViewVisibility.VISIBLE,
+                    progressBarVisibility = ViewVisibility.GONE
+                )
+                
+            } else {
+                _stateLiveData.value = getOrCreateState().copy(validationResult = validationResult)
+            }
         }
     }
     
@@ -98,7 +114,6 @@ class RegistrationViewModel @Inject constructor(
         return _stateLiveData.value ?: RegistrationViewState(
             validationResult = ValidationResult(null, null, null, null),
             registrationError = null,
-            isUserSuccessfullyRegistered = false,
             buttonVisibility = ViewVisibility.VISIBLE,
             progressBarVisibility = ViewVisibility.GONE
         )
@@ -106,34 +121,35 @@ class RegistrationViewModel @Inject constructor(
     
     private fun inputFieldsIsCorrect(validationResult: ValidationResult): Boolean {
         return (
-            validationResult.name == null &&
-            validationResult.login == null &&
-            validationResult.password == null &&
-            validationResult.repeatedPassword == null
-        )
+                validationResult.name == null &&
+                        validationResult.login == null &&
+                        validationResult.password == null &&
+                        validationResult.repeatedPassword == null
+                )
     }
     
-    private fun getValidationResult(inputFieldsValues: InputFieldValues): ValidationResult = with(inputFieldsValues) {
-        val nameValidation = ValidateInputFieldUseCase(IsEmptyValidator())
-        val loginValidation = ValidateInputFieldUseCase(
-            IsEmptyValidator(),
-            LengthValidator(NecessaryLength.Login(NECESSARY_LOGIN_LENGTH)),
-            IllegalCharactersValidator("""\W""".toRegex())
-        )
-        val passwordValidation =
-            ValidateInputFieldUseCase(LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)))
-        val repeatedPasswordValidation = ValidateInputFieldUseCase(
-            LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)),
-            FieldsMatchValidator(password)
-        )
-        
-        return ValidationResult(
-            name = nameValidation(name).defineValidationResult(),
-            login = loginValidation(login).defineValidationResult(),
-            password = passwordValidation(password).defineValidationResult(),
-            repeatedPassword = repeatedPasswordValidation(repeatedPassword).defineValidationResult()
-        )
-    }
+    private suspend fun getValidationResult(inputFieldsValues: InputFieldValues): ValidationResult =
+        with(inputFieldsValues) {
+            val nameValidation = ValidateInputFieldUseCase(IsEmptyValidator())
+            val loginValidation = ValidateInputFieldUseCase(
+                IsEmptyValidator(),
+                LengthValidator(NecessaryLength.Login(NECESSARY_LOGIN_LENGTH)),
+                IllegalCharactersValidator("""\W""".toRegex())
+            )
+            val passwordValidation =
+                ValidateInputFieldUseCase(LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)))
+            val repeatedPasswordValidation = ValidateInputFieldUseCase(
+                LengthValidator(NecessaryLength.Password(NECESSARY_PASSWORD_LENGTH)),
+                FieldsMatchValidator(password)
+            )
+            
+            return ValidationResult(
+                name = nameValidation.execute(name).defineValidationResult(),
+                login = loginValidation.execute(login).defineValidationResult(),
+                password = passwordValidation.execute(password).defineValidationResult(),
+                repeatedPassword = repeatedPasswordValidation.execute(repeatedPassword).defineValidationResult()
+            )
+        }
     
     private fun Result<Unit>.defineValidationResult(): PresentationErrorList? {
         return this.fold(

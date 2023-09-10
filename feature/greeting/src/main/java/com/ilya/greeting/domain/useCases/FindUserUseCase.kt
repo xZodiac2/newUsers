@@ -1,6 +1,6 @@
 package com.ilya.greeting.domain.useCases
 
-import com.ilya.core.useCase.CoroutineUseCase
+import com.ilya.core.UseCase
 import com.ilya.data.UsersRepository
 import com.ilya.data.error.UsersDataError
 import com.ilya.greeting.domain.error.GreetingDomainError
@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class FindUserUseCase @Inject constructor(
     private val usersRepository: UsersRepository,
-) : CoroutineUseCase<GreetingUserData> {
+) : UseCase<GreetingUserData> {
     
     override suspend fun execute(data: Any): Result<GreetingUserData> {
         return usersRepository.searchByLogin(data.toString())

@@ -1,7 +1,6 @@
 package com.ilya.loginandregistration.login.presentation.viewModel
 
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,37 +31,42 @@ class LoginViewModel @Inject constructor(
     
     lateinit var loginFragmentRouter: LoginFragmentRouter
     
-    override fun onLoginClick(loginParams: UserLoginParams) = viewModelScope.launch {
-        _stateLiveData.value = getOrCreateState().copy(
-            buttonVisibility = ViewVisibility.GONE,
-            progressBarVisibility = ViewVisibility.VISIBLE
-        )
-        
-        findUser(loginParams)
-            .onSuccess { loginFragmentRouter.goToGreeting(it.login) }
-            .onFailure { error ->
-                error as LoginDomainError
-                
-                when (error) {
-                    is LoginDomainError.WrongLoginOrPassword -> {
-                        _stateLiveData.value = getOrCreateState().copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
-                    }
+    override fun onLoginClick(loginParams: UserLoginParams) {
+        viewModelScope.launch {
+            _stateLiveData.value = getOrCreateState().copy(
+                buttonVisibility = ViewVisibility.GONE,
+                progressBarVisibility = ViewVisibility.VISIBLE
+            )
+            
+            findUser(loginParams)
+                .onSuccess { loginFragmentRouter.goToGreeting(it.login) }
+                .onFailure { error ->
+                    error as LoginDomainError
                     
-                    is LoginDomainError.UnknownError -> {
-                        _stateLiveData.value = getOrCreateState().copy(loginError = LoginPresentationError.UnknownError)
-                    }
-                    
-                    is LoginDomainError.WrongLoginArgument -> {
-                        _stateLiveData.value = getOrCreateState().copy(loginError = LoginPresentationError.SomethingWentWrong)
-                        Log.e("msg", "Expected argument with type UserLoginParams")
+                    when (error) {
+                        is LoginDomainError.WrongLoginOrPassword -> {
+                            _stateLiveData.value =
+                                getOrCreateState().copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
+                        }
+                        
+                        is LoginDomainError.UnknownError -> {
+                            _stateLiveData.value =
+                                getOrCreateState().copy(loginError = LoginPresentationError.UnknownError)
+                        }
+                        
+                        is LoginDomainError.WrongLoginArgument -> {
+                            _stateLiveData.value =
+                                getOrCreateState().copy(loginError = LoginPresentationError.SomethingWentWrong)
+                            Log.e("msg", "Expected argument with type UserLoginParams")
+                        }
                     }
                 }
-            }
-        
-        _stateLiveData.value = getOrCreateState().copy(
-            buttonVisibility = ViewVisibility.VISIBLE,
-            progressBarVisibility = ViewVisibility.GONE
-        )
+            
+            _stateLiveData.value = getOrCreateState().copy(
+                buttonVisibility = ViewVisibility.VISIBLE,
+                progressBarVisibility = ViewVisibility.GONE
+            )
+        }
     }
     
     private suspend fun findUser(loginParams: UserLoginParams): Result<LoggedInUserData> = withContext(Dispatchers.IO) {
@@ -81,5 +85,8 @@ class LoginViewModel @Inject constructor(
         loginFragmentRouter.goToRegistration()
     }
     
+    override fun onInputFieldsChanged() {
+        _stateLiveData.value = getOrCreateState().copy(loginError = null)
+    }
     
 }
