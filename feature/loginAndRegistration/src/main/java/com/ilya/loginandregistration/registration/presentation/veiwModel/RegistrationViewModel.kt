@@ -28,6 +28,8 @@ import com.ilya.loginandregistration.registration.presentation.navigation.Regist
 import com.ilya.loginandregistration.registration.presentation.state.RegistrationViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -40,8 +42,8 @@ class RegistrationViewModel @Inject constructor(
     private val _stateLiveData: MutableLiveData<RegistrationViewState> = MutableLiveData()
     val stateLiveData: LiveData<RegistrationViewState> = _stateLiveData
     
-    private val _userRegistrationStatusLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
-    val userRegistrationStatusLiveData: LiveData<Boolean> = _userRegistrationStatusLiveData
+    private val _userRegistrationStatusLiveData = MutableSharedFlow<Boolean>()
+    val userRegistrationStatus: SharedFlow<Boolean> = _userRegistrationStatusLiveData
     
     lateinit var registrationFragmentRouter: RegistrationFragmentRouter
     
@@ -65,7 +67,7 @@ class RegistrationViewModel @Inject constructor(
                 
                 registerUser(newUserData)
                     .onSuccess {
-                        _userRegistrationStatusLiveData.value = true
+                        _userRegistrationStatusLiveData.emit(true)
                         registrationFragmentRouter.backToLogin()
                     }
                     .onFailure { error ->
@@ -78,19 +80,19 @@ class RegistrationViewModel @Inject constructor(
                                         login = listOf(RegistrationPresentationError.LoginAlreadyUsed)
                                     )
                                 )
-                                _userRegistrationStatusLiveData.value = false
+                                _userRegistrationStatusLiveData.emit(false)
                             }
                             
                             is RegistrationDomainError.IllegalRegistrationArgument -> {
                                 Log.d("msg", "Expected argument with type NewUserData")
-                                _userRegistrationStatusLiveData.value = false
+                                _userRegistrationStatusLiveData.emit(false)
                             }
                             
                             is RegistrationDomainError.UnknownError -> {
                                 _stateLiveData.value = getOrCreateState().copy(
                                     registrationError = RegistrationPresentationError.UnknownError,
                                 )
-                                _userRegistrationStatusLiveData.value = false
+                                _userRegistrationStatusLiveData.emit(false)
                             }
                         }
                     }

@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.ilya.loginandregistration.databinding.FragmentRegistrationBinding
 import com.ilya.loginandregistration.registration.presentation.navigation.RegistrationFragmentRouter
 import com.ilya.loginandregistration.registration.presentation.veiwModel.RegistrationViewModel
 import com.ilya.loginandregistration.registration.presentation.view.RegistrationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,7 +38,7 @@ class RegistrationFragment : Fragment() {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false)
         view = RegistrationView(binding, registrationViewModel)
         registrationViewModel.stateLiveData.observe(viewLifecycleOwner, view::bind)
-        registrationViewModel.userRegistrationStatusLiveData.observe(viewLifecycleOwner, view::bindRegistrationStatus)
+        lifecycleScope.launch { registrationViewModel.userRegistrationStatus.collectLatest(view::bindRegistrationStatus) }
         return binding.root
     }
     

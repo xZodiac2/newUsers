@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:text="@string/text_greeting"
+        android:textAlignment="center"
         android:textSize="32sp" />
 
     <ProgressBar

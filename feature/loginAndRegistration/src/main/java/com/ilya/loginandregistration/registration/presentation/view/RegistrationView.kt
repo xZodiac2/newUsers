@@ -57,9 +57,7 @@ class RegistrationView(
         textInputLayout.error = errorList?.joinToString("\n") { context.getStringByReference(it.textReference) }
     }
     
-    fun bindRegistrationStatus(status: Boolean?) {
-        status ?: return
-        
+    fun bindRegistrationStatus(status: Boolean) {
         if (status) {
             Toast.makeText(context, R.string.text_registration_user_added_successfully, Toast.LENGTH_SHORT).show()
         }
