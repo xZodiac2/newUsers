@@ -1,4 +1,4 @@
 <resources>
     <string name="text_greeting_btn_logout">Logout</string>
-    <string name="text_greeting">Hello, %s</string>
+    <string name="text_greeting">Hello, \n %s</string>
 </resources>

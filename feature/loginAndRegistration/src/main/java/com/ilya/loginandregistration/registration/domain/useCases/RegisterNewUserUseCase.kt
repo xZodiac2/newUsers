@@ -12,8 +12,9 @@ class RegisterNewUserUseCase @Inject constructor(
     private val usersRepository: UsersRepository,
 ) : UseCase<Unit> {
     
-    override operator fun invoke(data: Any): Result<Unit> {
-        val newUserData = data as? NewUserData ?: return Result.failure(RegistrationDomainError.IllegalRegistrationArgument)
+    override suspend fun execute(data: Any): Result<Unit> {
+        val newUserData =
+            data as? NewUserData ?: return Result.failure(RegistrationDomainError.IllegalRegistrationArgument)
         
         return usersRepository.add(UserData(newUserData.name, newUserData.login, newUserData.passwordHash))
             .fold(

@@ -1,5 +1,5 @@
 package com.ilya.core
 
-interface UseCase<T> {
-    operator fun invoke(data: Any): Result<T>
+interface UseCase<out T> {
+    suspend fun execute(data: Any): Result<T>
 }

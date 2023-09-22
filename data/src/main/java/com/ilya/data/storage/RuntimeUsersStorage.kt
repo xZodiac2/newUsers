@@ -11,7 +11,7 @@ internal class RuntimeUsersStorage @Inject constructor() : Storage<UserData> {
     
     private val users: HashMap<String, UserData> = hashMapOf()
     
-    override fun add(data: UserData): Result<Unit> {
+    override suspend fun add(data: UserData): Result<Unit> {
         if (users.containsKey(data.login)) {
             return Result.failure(UsersDataError.AlreadyExist)
         }
@@ -20,7 +20,7 @@ internal class RuntimeUsersStorage @Inject constructor() : Storage<UserData> {
         return Result.success(Unit)
     }
     
-    override fun remove(willRemove: UserData): Result<Unit> {
+    override suspend fun remove(willRemove: UserData): Result<Unit> {
         if (users.containsKey(willRemove.login)) {
             users.remove(willRemove.login)
             return Result.success(Unit)
@@ -29,7 +29,7 @@ internal class RuntimeUsersStorage @Inject constructor() : Storage<UserData> {
         return Result.failure(UsersDataError.NotFound)
     }
     
-    override fun searchByLogin(login: String): Result<UserData> {
+    override suspend fun searchByLogin(login: String): Result<UserData> {
         return when(val foundUser = users[login]) {
             null -> Result.failure(UsersDataError.NotFound)
             else -> Result.success(foundUser)

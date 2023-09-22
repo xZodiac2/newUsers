@@ -5,4 +5,5 @@ import com.ilya.loginandregistration.login.domain.models.UserLoginParams
 interface LoginViewCallback {
     fun onLoginClick(loginParams: UserLoginParams)
     fun onOfferToRegisterClick()
+    fun onInputFieldsChanged()
 }

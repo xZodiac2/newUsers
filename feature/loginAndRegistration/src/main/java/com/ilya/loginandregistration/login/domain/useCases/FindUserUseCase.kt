@@ -12,7 +12,7 @@ class FindUserUseCase @Inject constructor(
     private val usersRepository: UsersRepository,
 ) : UseCase<LoggedInUserData> {
     
-    override operator fun invoke(data: Any): Result<LoggedInUserData> {
+    override suspend fun execute(data: Any): Result<LoggedInUserData> {
         val loginParams = data as? UserLoginParams ?: return Result.failure(LoginDomainError.WrongLoginArgument)
         
         return usersRepository.searchByLogin(loginParams.login)
