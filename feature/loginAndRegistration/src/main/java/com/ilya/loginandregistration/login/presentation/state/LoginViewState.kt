@@ -4,7 +4,7 @@ import com.ilya.core.enums.ViewVisibility
 import com.ilya.loginandregistration.login.presentation.error.LoginPresentationError
 
 data class LoginViewState(
-    val loginError: LoginPresentationError?,
-    val buttonVisibility: ViewVisibility,
-    val progressBarVisibility: ViewVisibility
+    val loginError: LoginPresentationError? = null,
+    val buttonVisibility: ViewVisibility = ViewVisibility.VISIBLE,
+    val progressBarVisibility: ViewVisibility = ViewVisibility.GONE,
 )

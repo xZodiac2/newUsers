@@ -33,9 +33,7 @@ class LoginView(
         etPassword.doOnTextChanged { _, _, _, _ -> callback.onInputFieldsChanged() }
     }
     
-    fun bind(loginViewState: LoginViewState?) = with(binding) {
-        loginViewState ?: return
-        
+    fun bind(loginViewState: LoginViewState) = with(binding) {
         tvError.setTextByReference(loginViewState.loginError?.textReference)
         
         progressBar.setViewVisibility(loginViewState.progressBarVisibility)

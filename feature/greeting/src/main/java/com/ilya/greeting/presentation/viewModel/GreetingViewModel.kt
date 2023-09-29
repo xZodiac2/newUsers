@@ -1,8 +1,6 @@
 package com.ilya.greeting.presentation.viewModel
 
 import android.os.Bundle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.TextReference
@@ -15,6 +13,8 @@ import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
 import com.ilya.greeting.presentation.state.GreetingViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -25,8 +25,8 @@ class GreetingViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
 ) : ViewModel(), GreetingViewCallback {
     
-    private val _stateLiveData: MutableLiveData<GreetingViewState> = MutableLiveData()
-    val stateLiveData: LiveData<GreetingViewState> = _stateLiveData
+    private val _stateLiveData: MutableStateFlow<GreetingViewState> = MutableStateFlow(GreetingViewState())
+    val stateLiveData: StateFlow<GreetingViewState> = _stateLiveData
     
     lateinit var greetingFragmentRouter: GreetingFragmentRouter
     
@@ -35,7 +35,7 @@ class GreetingViewModel @Inject constructor(
     }
     
     fun getUser(args: Bundle) = viewModelScope.launch {
-        val state = getOrCreateState()
+        val state = _stateLiveData.value
         val userLogin = args.getString(KEY_USER_LOGIN)
         
         if (userLogin == null) {
@@ -68,7 +68,7 @@ class GreetingViewModel @Inject constructor(
         }
         
         
-        _stateLiveData.value = getOrCreateState().copy(
+        _stateLiveData.value = _stateLiveData.value.copy(
             userNameVisibility = ViewVisibility.VISIBLE,
             progressBarVisibility = ViewVisibility.GONE
         )
@@ -76,14 +76,6 @@ class GreetingViewModel @Inject constructor(
     
     private suspend fun findUser(userLogin: String): Result<GreetingUserData> = withContext(Dispatchers.IO) {
         return@withContext findUserUseCase.execute(userLogin)
-    }
-    
-    private fun getOrCreateState(): GreetingViewState {
-        return stateLiveData.value ?: GreetingViewState(
-            greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf("")),
-            userNameVisibility = ViewVisibility.GONE,
-            progressBarVisibility = ViewVisibility.VISIBLE
-        )
     }
     
     private fun backToLogin() {

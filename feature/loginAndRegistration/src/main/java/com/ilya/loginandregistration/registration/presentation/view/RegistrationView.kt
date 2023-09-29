@@ -41,9 +41,7 @@ class RegistrationView(
         )
     }
     
-    fun bind(registrationViewState: RegistrationViewState?) = with(binding) {
-        registrationViewState ?: return
-        
+    fun bind(registrationViewState: RegistrationViewState) = with(binding) {
         bindErrorList(nameInputLayout, registrationViewState.validationResult.name)
         bindErrorList(loginInputLayout, registrationViewState.validationResult.login)
         bindErrorList(passwordInputLayout, registrationViewState.validationResult.password)

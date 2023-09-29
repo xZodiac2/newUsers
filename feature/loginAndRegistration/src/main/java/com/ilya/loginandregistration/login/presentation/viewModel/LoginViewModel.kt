@@ -1,8 +1,6 @@
 package com.ilya.loginandregistration.login.presentation.viewModel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.enums.ViewVisibility
@@ -16,6 +14,8 @@ import com.ilya.loginandregistration.login.presentation.navigation.LoginFragment
 import com.ilya.loginandregistration.login.presentation.state.LoginViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,14 +26,14 @@ class LoginViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
 ) : ViewModel(), LoginViewCallback {
     
-    private val _stateLiveData: MutableLiveData<LoginViewState> = MutableLiveData()
-    val stateLiveData: LiveData<LoginViewState> = _stateLiveData
+    private val _stateLiveData: MutableStateFlow<LoginViewState> = MutableStateFlow(LoginViewState())
+    val stateLiveData: StateFlow<LoginViewState> = _stateLiveData
     
     lateinit var loginFragmentRouter: LoginFragmentRouter
     
     override fun onLoginClick(loginParams: UserLoginParams) {
         viewModelScope.launch {
-            _stateLiveData.value = getOrCreateState().copy(
+            _stateLiveData.value = _stateLiveData.value.copy(
                 buttonVisibility = ViewVisibility.GONE,
                 progressBarVisibility = ViewVisibility.VISIBLE
             )
@@ -46,23 +46,23 @@ class LoginViewModel @Inject constructor(
                     when (error) {
                         is LoginDomainError.WrongLoginOrPassword -> {
                             _stateLiveData.value =
-                                getOrCreateState().copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
+                                _stateLiveData.value.copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
                         }
                         
                         is LoginDomainError.UnknownError -> {
                             _stateLiveData.value =
-                                getOrCreateState().copy(loginError = LoginPresentationError.UnknownError)
+                                _stateLiveData.value.copy(loginError = LoginPresentationError.UnknownError)
                         }
                         
                         is LoginDomainError.WrongLoginArgument -> {
                             _stateLiveData.value =
-                                getOrCreateState().copy(loginError = LoginPresentationError.SomethingWentWrong)
+                                _stateLiveData.value.copy(loginError = LoginPresentationError.SomethingWentWrong)
                             Log.e("msg", "Expected argument with type UserLoginParams")
                         }
                     }
                 }
             
-            _stateLiveData.value = getOrCreateState().copy(
+            _stateLiveData.value = _stateLiveData.value.copy(
                 buttonVisibility = ViewVisibility.VISIBLE,
                 progressBarVisibility = ViewVisibility.GONE
             )
@@ -73,20 +73,12 @@ class LoginViewModel @Inject constructor(
         return@withContext findUserUseCase.execute(loginParams)
     }
     
-    private fun getOrCreateState(): LoginViewState {
-        return _stateLiveData.value ?: LoginViewState(
-            loginError = null,
-            buttonVisibility = ViewVisibility.VISIBLE,
-            progressBarVisibility = ViewVisibility.GONE
-        )
-    }
-    
     override fun onOfferToRegisterClick() {
         loginFragmentRouter.goToRegistration()
     }
     
     override fun onInputFieldsChanged() {
-        _stateLiveData.value = getOrCreateState().copy(loginError = null)
+        _stateLiveData.value = _stateLiveData.value.copy(loginError = null)
     }
     
 }

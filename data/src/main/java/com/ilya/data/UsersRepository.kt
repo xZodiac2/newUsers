@@ -1,27 +1,44 @@
 package com.ilya.data
 
+import android.database.sqlite.SQLiteConstraintException
 import com.ilya.core.Repository
-import com.ilya.data.models.UserData
-import com.ilya.data.storage.RuntimeUsersStorage
+import com.ilya.data.database.UsersDao
+import com.ilya.data.database.entity.UserData
+import com.ilya.data.error.UsersDataError
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
-class UsersRepository @Inject internal constructor(
-    private val runtimeUsersStorage: RuntimeUsersStorage
+class UsersRepository @Inject constructor(
+    private val dao: UsersDao,
 ) : Repository<UserData> {
     
     override suspend fun add(data: UserData): Result<Unit> {
         delay(1000)
-        return runtimeUsersStorage.add(data)
+        return try {
+            dao.registerUser(data)
+            Result.success(Unit)
+        } catch (e: SQLiteConstraintException) {
+            Result.failure(UsersDataError.AlreadyExist)
+        }
     }
     
     override suspend fun remove(willRemove: UserData): Result<Unit> {
         delay(1000)
-        return runtimeUsersStorage.remove(willRemove)
+        return try {
+            val user = dao.getUser(willRemove.login)
+            dao.deleteUser(user)
+            Result.success(Unit)
+        } catch (e: SQLiteConstraintException) {
+            Result.failure(UsersDataError.NotFound)
+        }
     }
     
     override suspend fun searchByLogin(login: String): Result<UserData> {
         delay(1000)
-        return runtimeUsersStorage.searchByLogin(login)
+        return when (val foundUser = dao.getUser(login)) {
+            null -> Result.failure(UsersDataError.NotFound)
+            else -> Result.success(foundUser)
+        }
     }
+    
 }

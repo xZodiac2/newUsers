@@ -19,9 +19,7 @@ class GreetingView(
         btnLogout.setOnClickListener { callback.onLogoutClick() }
     }
     
-    fun bind(greetingViewState: GreetingViewState?) = with(binding) {
-        greetingViewState ?: return
-        
+    fun bind(greetingViewState: GreetingViewState) = with(binding) {
         progressBar.setViewVisibility(greetingViewState.progressBarVisibility)
         tvName.setViewVisibility(greetingViewState.userNameVisibility)
         tvName.setTextByReference(greetingViewState.greetingTextReference)

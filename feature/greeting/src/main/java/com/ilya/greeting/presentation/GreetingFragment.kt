@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.ilya.greeting.databinding.FragmentGreetingBinding
 import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
 import com.ilya.greeting.presentation.view.GreetingView
@@ -22,7 +23,8 @@ class GreetingFragment : Fragment() {
     
     private val greetingViewModel: GreetingViewModel by viewModels()
     
-    @Inject lateinit var greetingFragmentRouter: GreetingFragmentRouter
+    @Inject
+    lateinit var greetingFragmentRouter: GreetingFragmentRouter
     
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -33,7 +35,9 @@ class GreetingFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentGreetingBinding.inflate(inflater, container, false)
         view = GreetingView(binding, greetingViewModel)
-        greetingViewModel.stateLiveData.observe(viewLifecycleOwner, view::bind)
+        lifecycleScope.launchWhenStarted {
+            greetingViewModel.stateLiveData.collect(view::bind)
+        }
         return binding.root
     }
     

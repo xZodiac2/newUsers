@@ -1,8 +1,6 @@
 package com.ilya.loginandregistration.registration.presentation.veiwModel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.computedMD5Hash
@@ -29,7 +27,9 @@ import com.ilya.loginandregistration.registration.presentation.state.Registratio
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -39,8 +39,8 @@ class RegistrationViewModel @Inject constructor(
     private val registerNewUserUseCase: RegisterNewUserUseCase,
 ) : ViewModel(), RegistrationViewCallback {
     
-    private val _stateLiveData: MutableLiveData<RegistrationViewState> = MutableLiveData()
-    val stateLiveData: LiveData<RegistrationViewState> = _stateLiveData
+    private val _stateLiveData: MutableStateFlow<RegistrationViewState> = MutableStateFlow(RegistrationViewState())
+    val stateLiveData: StateFlow<RegistrationViewState> = _stateLiveData
     
     private val _userRegistrationStatusLiveData = MutableSharedFlow<Boolean>()
     val userRegistrationStatus: SharedFlow<Boolean> = _userRegistrationStatusLiveData
@@ -60,7 +60,7 @@ class RegistrationViewModel @Inject constructor(
                         inputFieldValues.password.computedMD5Hash()
                     )
                 
-                _stateLiveData.value = getOrCreateState().copy(
+                _stateLiveData.value = _stateLiveData.value.copy(
                     buttonVisibility = ViewVisibility.GONE,
                     progressBarVisibility = ViewVisibility.VISIBLE
                 )
@@ -75,7 +75,7 @@ class RegistrationViewModel @Inject constructor(
                         
                         when (error) {
                             is RegistrationDomainError.LoginAlreadyUsed -> {
-                                _stateLiveData.value = getOrCreateState().copy(
+                                _stateLiveData.value = _stateLiveData.value.copy(
                                     validationResult = validationResult.copy(
                                         login = listOf(RegistrationPresentationError.LoginAlreadyUsed)
                                     )
@@ -89,7 +89,7 @@ class RegistrationViewModel @Inject constructor(
                             }
                             
                             is RegistrationDomainError.UnknownError -> {
-                                _stateLiveData.value = getOrCreateState().copy(
+                                _stateLiveData.value = _stateLiveData.value.copy(
                                     registrationError = RegistrationPresentationError.UnknownError,
                                 )
                                 _userRegistrationStatusLiveData.emit(false)
@@ -97,28 +97,19 @@ class RegistrationViewModel @Inject constructor(
                         }
                     }
                 
-                _stateLiveData.value = getOrCreateState().copy(
+                _stateLiveData.value = _stateLiveData.value.copy(
                     buttonVisibility = ViewVisibility.VISIBLE,
                     progressBarVisibility = ViewVisibility.GONE
                 )
                 
             } else {
-                _stateLiveData.value = getOrCreateState().copy(validationResult = validationResult)
+                _stateLiveData.value = _stateLiveData.value.copy(validationResult = validationResult)
             }
         }
     }
     
     private suspend fun registerUser(newUserData: NewUserData): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext registerNewUserUseCase.execute(newUserData)
-    }
-    
-    private fun getOrCreateState(): RegistrationViewState {
-        return _stateLiveData.value ?: RegistrationViewState(
-            validationResult = ValidationResult(null, null, null, null),
-            registrationError = null,
-            buttonVisibility = ViewVisibility.VISIBLE,
-            progressBarVisibility = ViewVisibility.GONE
-        )
     }
     
     private fun inputFieldsIsCorrect(validationResult: ValidationResult): Boolean {

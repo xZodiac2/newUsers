@@ -2,8 +2,8 @@ package com.ilya.loginandregistration.registration.domain.useCases
 
 import com.ilya.core.UseCase
 import com.ilya.data.UsersRepository
+import com.ilya.data.database.entity.UserData
 import com.ilya.data.error.UsersDataError
-import com.ilya.data.models.UserData
 import com.ilya.loginandregistration.registration.domain.error.RegistrationDomainError
 import com.ilya.loginandregistration.registration.domain.models.NewUserData
 import javax.inject.Inject
@@ -16,7 +16,7 @@ class RegisterNewUserUseCase @Inject constructor(
         val newUserData =
             data as? NewUserData ?: return Result.failure(RegistrationDomainError.IllegalRegistrationArgument)
         
-        return usersRepository.add(UserData(newUserData.name, newUserData.login, newUserData.passwordHash))
+        return usersRepository.add(UserData(newUserData.login, newUserData.name, newUserData.passwordHash))
             .fold(
                 onSuccess = { Result.success(Unit) },
                 onFailure = { error ->
