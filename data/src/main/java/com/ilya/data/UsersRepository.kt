@@ -24,12 +24,12 @@ class UsersRepository @Inject constructor(
     
     override suspend fun remove(willRemove: UserData): Result<Unit> {
         delay(1000)
-        return try {
-            val user = dao.getUser(willRemove.login)
-            dao.deleteUser(user)
-            Result.success(Unit)
-        } catch (e: SQLiteConstraintException) {
-            Result.failure(UsersDataError.NotFound)
+        return when (dao.getUser(willRemove.login)) {
+            null -> Result.failure(UsersDataError.NotFound)
+            else -> {
+                dao.deleteUser(willRemove)
+                Result.success(Unit)
+            }
         }
     }
     

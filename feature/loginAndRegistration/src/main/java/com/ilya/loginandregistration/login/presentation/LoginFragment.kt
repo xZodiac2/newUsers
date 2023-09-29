@@ -35,9 +35,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         view = LoginView(binding, loginViewModel)
-        lifecycleScope.launchWhenStarted {
-            loginViewModel.stateLiveData.collect(view::bind)
-        }
+        lifecycleScope.launchWhenStarted { loginViewModel.stateLiveData.collect(view::bind) }
         return binding.root
     }
     

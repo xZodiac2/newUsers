@@ -17,7 +17,7 @@ interface UsersDao {
     @Query("SELECT * FROM users_table WHERE login LIKE :userLogin")
     suspend fun getUser(userLogin: String): UserData
     
-    @Delete()
+    @Delete
     suspend fun deleteUser(user: UserData)
     
     @Update
