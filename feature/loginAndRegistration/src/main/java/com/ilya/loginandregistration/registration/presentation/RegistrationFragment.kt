@@ -37,7 +37,7 @@ class RegistrationFragment : Fragment() {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false)
         view = RegistrationView(binding, registrationViewModel)
         lifecycleScope.launchWhenStarted { registrationViewModel.userRegistrationStatus.collectLatest(view::bindRegistrationStatus) }
-        lifecycleScope.launchWhenStarted { registrationViewModel.stateLiveData.collect(view::bind) }
+        lifecycleScope.launchWhenStarted { registrationViewModel.stateLiveData.collect(view::bindScreenState) }
         return binding.root
     }
     

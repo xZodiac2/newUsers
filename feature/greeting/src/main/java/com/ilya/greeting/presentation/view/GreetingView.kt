@@ -1,6 +1,6 @@
 package com.ilya.greeting.presentation.view
 
-import com.ilya.core.setTextByReference
+import com.ilya.core.getStringByReference
 import com.ilya.core.setViewVisibility
 import com.ilya.greeting.databinding.FragmentGreetingBinding
 import com.ilya.greeting.presentation.callback.GreetingViewCallback
@@ -20,9 +20,11 @@ class GreetingView(
     }
     
     fun bind(greetingViewState: GreetingViewState) = with(binding) {
-        progressBar.setViewVisibility(greetingViewState.progressBarVisibility)
         tvName.setViewVisibility(greetingViewState.userNameVisibility)
-        tvName.setTextByReference(greetingViewState.greetingTextReference)
+        progressBar.setViewVisibility(greetingViewState.progressBarVisibility)
+        tvName.text = greetingViewState.greetingTextReference?.let {
+            root.context.getStringByReference(it)
+        }
     }
     
 }
