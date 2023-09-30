@@ -10,7 +10,7 @@ import com.ilya.loginandregistration.databinding.FragmentRegistrationBinding
 import com.ilya.loginandregistration.registration.presentation.callback.RegistrationViewCallback
 import com.ilya.loginandregistration.registration.presentation.error.PresentationErrorList
 import com.ilya.loginandregistration.registration.presentation.models.InputFieldValues
-import com.ilya.loginandregistration.registration.presentation.state.RegistrationViewState
+import com.ilya.loginandregistration.registration.presentation.state.RegistrationScreenState
 
 class RegistrationView(
     private val binding: FragmentRegistrationBinding,
@@ -41,22 +41,25 @@ class RegistrationView(
         )
     }
     
-    fun bindScreenState(registrationViewState: RegistrationViewState) = with(binding) {
-        bindErrorList(nameInputLayout, registrationViewState.validationResult.name)
-        bindErrorList(loginInputLayout, registrationViewState.validationResult.login)
-        bindErrorList(passwordInputLayout, registrationViewState.validationResult.password)
-        bindErrorList(repeatedPasswordInputLayout, registrationViewState.validationResult.repeatedPassword)
+    fun bindScreenState(registrationScreenState: RegistrationScreenState) = with(binding) {
+        bindErrorList(nameInputLayout, registrationScreenState.validationResult.name)
+        bindErrorList(loginInputLayout, registrationScreenState.validationResult.login)
+        bindErrorList(passwordInputLayout, registrationScreenState.validationResult.password)
+        bindErrorList(
+            repeatedPasswordInputLayout,
+            registrationScreenState.validationResult.repeatedPassword
+        )
         
-        btnRegister.setViewVisibility(registrationViewState.buttonVisibility)
-        progressBar.setViewVisibility(registrationViewState.progressBarVisibility)
+        btnRegister.setViewVisibility(registrationScreenState.buttonVisibility)
+        progressBar.setViewVisibility(registrationScreenState.progressBarVisibility)
     }
     
     private fun bindErrorList(textInputLayout: TextInputLayout, errorList: PresentationErrorList?) {
         textInputLayout.error = errorList?.joinToString("\n") { context.getStringByReference(it.textReference) }
     }
     
-    fun bindRegistrationStatus(status: Boolean) {
-        if (status) {
+    fun bindRegistrationStatus(registrationStatus: Boolean) {
+        if (registrationStatus) {
             Toast.makeText(context, R.string.text_registration_user_added_successfully, Toast.LENGTH_SHORT).show()
         }
     }

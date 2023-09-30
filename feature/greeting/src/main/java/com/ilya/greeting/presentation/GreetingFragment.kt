@@ -35,7 +35,7 @@ class GreetingFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentGreetingBinding.inflate(inflater, container, false)
         view = GreetingView(binding, greetingViewModel)
-        lifecycleScope.launchWhenStarted { greetingViewModel.stateLiveData.collect(view::bind) }
+        lifecycleScope.launchWhenStarted { greetingViewModel.screenStateFlow.collect(view::bind) }
         return binding.root
     }
     

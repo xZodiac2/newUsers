@@ -4,7 +4,7 @@ import com.ilya.core.getStringByReference
 import com.ilya.core.setViewVisibility
 import com.ilya.greeting.databinding.FragmentGreetingBinding
 import com.ilya.greeting.presentation.callback.GreetingViewCallback
-import com.ilya.greeting.presentation.state.GreetingViewState
+import com.ilya.greeting.presentation.state.GreetingScreenState
 
 class GreetingView(
     private val binding: FragmentGreetingBinding,
@@ -19,10 +19,10 @@ class GreetingView(
         btnLogout.setOnClickListener { callback.onLogoutClick() }
     }
     
-    fun bind(greetingViewState: GreetingViewState) = with(binding) {
-        tvName.setViewVisibility(greetingViewState.userNameVisibility)
-        progressBar.setViewVisibility(greetingViewState.progressBarVisibility)
-        tvName.text = greetingViewState.greetingTextReference?.let {
+    fun bind(greetingScreenState: GreetingScreenState) = with(binding) {
+        tvName.setViewVisibility(greetingScreenState.userNameVisibility)
+        progressBar.setViewVisibility(greetingScreenState.progressBarVisibility)
+        tvName.text = greetingScreenState.greetingTextReference?.let {
             root.context.getStringByReference(it)
         }
     }

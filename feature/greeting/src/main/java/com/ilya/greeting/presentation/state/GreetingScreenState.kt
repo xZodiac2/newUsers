@@ -5,7 +5,7 @@ import com.ilya.core.enums.ViewVisibility
 import com.ilya.greeting.domain.models.GreetingUserData
 
 
-data class GreetingViewState(
+data class GreetingScreenState(
     val greetingTextReference: TextReference? = null,
     val user: GreetingUserData? = null,
     val userNameVisibility: ViewVisibility = ViewVisibility.GONE,

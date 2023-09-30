@@ -11,7 +11,7 @@ import com.ilya.loginandregistration.login.domain.useCases.FindUserUseCase
 import com.ilya.loginandregistration.login.presentation.callback.LoginViewCallback
 import com.ilya.loginandregistration.login.presentation.error.LoginPresentationError
 import com.ilya.loginandregistration.login.presentation.navigation.LoginFragmentRouter
-import com.ilya.loginandregistration.login.presentation.state.LoginViewState
+import com.ilya.loginandregistration.login.presentation.state.LoginScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,14 +26,14 @@ class LoginViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
 ) : ViewModel(), LoginViewCallback {
     
-    private val _stateLiveData: MutableStateFlow<LoginViewState> = MutableStateFlow(LoginViewState())
-    val stateLiveData: StateFlow<LoginViewState> = _stateLiveData
+    private val _screenStateFlow: MutableStateFlow<LoginScreenState> = MutableStateFlow(LoginScreenState())
+    val screenStateFlow: StateFlow<LoginScreenState> = _screenStateFlow
     
     lateinit var loginFragmentRouter: LoginFragmentRouter
     
     override fun onLoginClick(loginParams: UserLoginParams) {
         viewModelScope.launch {
-            _stateLiveData.value = _stateLiveData.value.copy(
+            _screenStateFlow.value = _screenStateFlow.value.copy(
                 buttonVisibility = ViewVisibility.GONE,
                 progressBarVisibility = ViewVisibility.VISIBLE
             )
@@ -45,24 +45,24 @@ class LoginViewModel @Inject constructor(
                     
                     when (error) {
                         is LoginDomainError.WrongLoginOrPassword -> {
-                            _stateLiveData.value =
-                                _stateLiveData.value.copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
+                            _screenStateFlow.value =
+                                _screenStateFlow.value.copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
                         }
                         
                         is LoginDomainError.UnknownError -> {
-                            _stateLiveData.value =
-                                _stateLiveData.value.copy(loginError = LoginPresentationError.UnknownError)
+                            _screenStateFlow.value =
+                                _screenStateFlow.value.copy(loginError = LoginPresentationError.UnknownError)
                         }
                         
                         is LoginDomainError.WrongLoginArgument -> {
-                            _stateLiveData.value =
-                                _stateLiveData.value.copy(loginError = LoginPresentationError.SomethingWentWrong)
+                            _screenStateFlow.value =
+                                _screenStateFlow.value.copy(loginError = LoginPresentationError.SomethingWentWrong)
                             Log.e("msg", "Expected argument with type UserLoginParams")
                         }
                     }
                 }
             
-            _stateLiveData.value = _stateLiveData.value.copy(
+            _screenStateFlow.value = _screenStateFlow.value.copy(
                 buttonVisibility = ViewVisibility.VISIBLE,
                 progressBarVisibility = ViewVisibility.GONE
             )
@@ -78,7 +78,7 @@ class LoginViewModel @Inject constructor(
     }
     
     override fun onInputFieldsChanged() {
-        _stateLiveData.value = _stateLiveData.value.copy(loginError = null)
+        _screenStateFlow.value = _screenStateFlow.value.copy(loginError = null)
     }
     
 }

@@ -23,7 +23,7 @@ import com.ilya.loginandregistration.registration.presentation.error.Registratio
 import com.ilya.loginandregistration.registration.presentation.models.InputFieldValues
 import com.ilya.loginandregistration.registration.presentation.models.ValidationResult
 import com.ilya.loginandregistration.registration.presentation.navigation.RegistrationFragmentRouter
-import com.ilya.loginandregistration.registration.presentation.state.RegistrationViewState
+import com.ilya.loginandregistration.registration.presentation.state.RegistrationScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,11 +39,11 @@ class RegistrationViewModel @Inject constructor(
     private val registerNewUserUseCase: RegisterNewUserUseCase,
 ) : ViewModel(), RegistrationViewCallback {
     
-    private val _stateLiveData: MutableStateFlow<RegistrationViewState> = MutableStateFlow(RegistrationViewState())
-    val stateLiveData: StateFlow<RegistrationViewState> = _stateLiveData
-    
-    private val _userRegistrationStatusLiveData = MutableSharedFlow<Boolean>()
-    val userRegistrationStatus: SharedFlow<Boolean> = _userRegistrationStatusLiveData
+    private val _screenStateFlow: MutableStateFlow<RegistrationScreenState> =
+        MutableStateFlow(RegistrationScreenState())
+    val screenStateFlow: StateFlow<RegistrationScreenState> = _screenStateFlow
+    private val _userRegistrationStatusSharedFlow = MutableSharedFlow<Boolean>()
+    val userRegistrationStatusSharedFlow: SharedFlow<Boolean> = _userRegistrationStatusSharedFlow
     
     lateinit var registrationFragmentRouter: RegistrationFragmentRouter
     
@@ -60,14 +60,14 @@ class RegistrationViewModel @Inject constructor(
                         inputFieldValues.password.computedMD5Hash()
                     )
                 
-                _stateLiveData.value = _stateLiveData.value.copy(
+                _screenStateFlow.value = _screenStateFlow.value.copy(
                     buttonVisibility = ViewVisibility.GONE,
                     progressBarVisibility = ViewVisibility.VISIBLE
                 )
                 
                 registerUser(newUserData)
                     .onSuccess {
-                        _userRegistrationStatusLiveData.emit(true)
+                        _userRegistrationStatusSharedFlow.emit(true)
                         registrationFragmentRouter.backToLogin()
                     }
                     .onFailure { error ->
@@ -75,35 +75,35 @@ class RegistrationViewModel @Inject constructor(
                         
                         when (error) {
                             is RegistrationDomainError.LoginAlreadyUsed -> {
-                                _stateLiveData.value = _stateLiveData.value.copy(
+                                _screenStateFlow.value = _screenStateFlow.value.copy(
                                     validationResult = validationResult.copy(
                                         login = listOf(RegistrationPresentationError.LoginAlreadyUsed)
                                     )
                                 )
-                                _userRegistrationStatusLiveData.emit(false)
+                                _userRegistrationStatusSharedFlow.emit(false)
                             }
                             
                             is RegistrationDomainError.IllegalRegistrationArgument -> {
                                 Log.d("msg", "Expected argument with type NewUserData")
-                                _userRegistrationStatusLiveData.emit(false)
+                                _userRegistrationStatusSharedFlow.emit(false)
                             }
                             
                             is RegistrationDomainError.UnknownError -> {
-                                _stateLiveData.value = _stateLiveData.value.copy(
+                                _screenStateFlow.value = _screenStateFlow.value.copy(
                                     registrationError = RegistrationPresentationError.UnknownError,
                                 )
-                                _userRegistrationStatusLiveData.emit(false)
+                                _userRegistrationStatusSharedFlow.emit(false)
                             }
                         }
                     }
                 
-                _stateLiveData.value = _stateLiveData.value.copy(
+                _screenStateFlow.value = _screenStateFlow.value.copy(
                     buttonVisibility = ViewVisibility.VISIBLE,
                     progressBarVisibility = ViewVisibility.GONE
                 )
                 
             } else {
-                _stateLiveData.value = _stateLiveData.value.copy(validationResult = validationResult)
+                _screenStateFlow.value = _screenStateFlow.value.copy(validationResult = validationResult)
             }
         }
     }
