@@ -45,10 +45,7 @@ class RegistrationView(
         bindErrorList(nameInputLayout, registrationScreenState.validationResult.name)
         bindErrorList(loginInputLayout, registrationScreenState.validationResult.login)
         bindErrorList(passwordInputLayout, registrationScreenState.validationResult.password)
-        bindErrorList(
-            repeatedPasswordInputLayout,
-            registrationScreenState.validationResult.repeatedPassword
-        )
+        bindErrorList(repeatedPasswordInputLayout, registrationScreenState.validationResult.repeatedPassword)
         
         btnRegister.setViewVisibility(registrationScreenState.buttonVisibility)
         progressBar.setViewVisibility(registrationScreenState.progressBarVisibility)
