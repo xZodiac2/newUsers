@@ -11,10 +11,11 @@ import com.ilya.greeting.domain.useCases.FindUserUseCase
 import com.ilya.greeting.presentation.callback.GreetingViewCallback
 import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
 import com.ilya.greeting.presentation.state.GreetingScreenState
+import com.ilya.greeting.presentation.state.GreetingWaitingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -25,8 +26,8 @@ class GreetingViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
 ) : ViewModel(), GreetingViewCallback {
     
-    private val _screenStateFlow: MutableStateFlow<GreetingScreenState> = MutableStateFlow(GreetingScreenState())
-    val screenStateFlow: StateFlow<GreetingScreenState> = _screenStateFlow
+    private val _screenStateFlow = MutableStateFlow(GreetingScreenState())
+    val screenStateFlow = _screenStateFlow.asStateFlow()
     
     lateinit var greetingFragmentRouter: GreetingFragmentRouter
     
@@ -44,10 +45,7 @@ class GreetingViewModel @Inject constructor(
         }
         
         if (state.user == null) {
-            _screenStateFlow.value = state.copy(
-                userNameVisibility = ViewVisibility.GONE,
-                progressBarVisibility = ViewVisibility.VISIBLE
-            )
+            toggleViewVisibilityByWaitingState(GreetingWaitingState.WaitingForResponse)
             
             findUser(userLogin)
                 .onSuccess {
@@ -55,9 +53,10 @@ class GreetingViewModel @Inject constructor(
                         user = it,
                         greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(it.name))
                     )
-                    
                 }
                 .onFailure { backToLogin() }
+            
+            toggleViewVisibilityByWaitingState(GreetingWaitingState.WaitingForUser)
         } else {
             _screenStateFlow.value = state.copy(
                 greetingTextReference = TextReference.Resource(
@@ -66,12 +65,24 @@ class GreetingViewModel @Inject constructor(
                 )
             )
         }
-        
-        
-        _screenStateFlow.value = _screenStateFlow.value.copy(
-            userNameVisibility = ViewVisibility.VISIBLE,
-            progressBarVisibility = ViewVisibility.GONE
-        )
+    }
+    
+    private fun toggleViewVisibilityByWaitingState(waitingState: GreetingWaitingState) {
+        when (waitingState) {
+            is GreetingWaitingState.WaitingForResponse -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    userNameVisibility = ViewVisibility.GONE,
+                    progressBarVisibility = ViewVisibility.VISIBLE
+                )
+            }
+            
+            is GreetingWaitingState.WaitingForUser -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    userNameVisibility = ViewVisibility.VISIBLE,
+                    progressBarVisibility = ViewVisibility.GONE
+                )
+            }
+        }
     }
     
     private suspend fun findUser(userLogin: String): Result<GreetingUserData> = withContext(Dispatchers.IO) {
