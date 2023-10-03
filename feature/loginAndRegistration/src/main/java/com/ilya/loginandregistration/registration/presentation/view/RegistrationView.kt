@@ -47,8 +47,13 @@ class RegistrationView(
         bindErrorList(passwordInputLayout, registrationScreenState.validationResult.password)
         bindErrorList(repeatedPasswordInputLayout, registrationScreenState.validationResult.repeatedPassword)
         
+        tvError.text = registrationScreenState.registrationError?.let {
+            context.getStringByReference(it.textReference)
+        }
+        
         btnRegister.setViewVisibility(registrationScreenState.buttonVisibility)
         progressBar.setViewVisibility(registrationScreenState.progressBarVisibility)
+        tvError.setViewVisibility(registrationScreenState.errorVisibility)
     }
     
     private fun bindErrorList(textInputLayout: TextInputLayout, errorList: PresentationErrorList?) {

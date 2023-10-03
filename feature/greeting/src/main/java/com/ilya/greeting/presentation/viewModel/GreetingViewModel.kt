@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.TextReference
+import com.ilya.core.enums.LoadingState
 import com.ilya.core.enums.ViewVisibility
 import com.ilya.greeting.R
 import com.ilya.greeting.domain.models.GreetingUserData
@@ -11,7 +12,6 @@ import com.ilya.greeting.domain.useCases.FindUserUseCase
 import com.ilya.greeting.presentation.callback.GreetingViewCallback
 import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
 import com.ilya.greeting.presentation.state.GreetingScreenState
-import com.ilya.greeting.presentation.state.GreetingWaitingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +45,7 @@ class GreetingViewModel @Inject constructor(
         }
         
         if (state.user == null) {
-            toggleViewVisibilityByWaitingState(GreetingWaitingState.WaitingForResponse)
+            toggleViewVisibilityByLoadingState(LoadingState.LOADING)
             
             findUser(userLogin)
                 .onSuccess {
@@ -53,10 +53,14 @@ class GreetingViewModel @Inject constructor(
                         user = it,
                         greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(it.name))
                     )
+                    toggleViewVisibilityByLoadingState(LoadingState.DONE)
                 }
-                .onFailure { backToLogin() }
+                .onFailure {
+                    toggleViewVisibilityByLoadingState(LoadingState.ERROR)
+                    backToLogin()
+                }
             
-            toggleViewVisibilityByWaitingState(GreetingWaitingState.WaitingForUser)
+            
         } else {
             _screenStateFlow.value = state.copy(
                 greetingTextReference = TextReference.Resource(
@@ -67,18 +71,25 @@ class GreetingViewModel @Inject constructor(
         }
     }
     
-    private fun toggleViewVisibilityByWaitingState(waitingState: GreetingWaitingState) {
-        when (waitingState) {
-            is GreetingWaitingState.WaitingForResponse -> {
+    private fun toggleViewVisibilityByLoadingState(loadingState: LoadingState) {
+        when (loadingState) {
+            LoadingState.LOADING -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
                     userNameVisibility = ViewVisibility.GONE,
                     progressBarVisibility = ViewVisibility.VISIBLE
                 )
             }
             
-            is GreetingWaitingState.WaitingForUser -> {
+            LoadingState.DONE -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
                     userNameVisibility = ViewVisibility.VISIBLE,
+                    progressBarVisibility = ViewVisibility.GONE
+                )
+            }
+            
+            LoadingState.ERROR -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    userNameVisibility = ViewVisibility.GONE,
                     progressBarVisibility = ViewVisibility.GONE
                 )
             }

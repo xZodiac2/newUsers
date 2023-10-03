@@ -38,6 +38,7 @@ class LoginView(
         
         progressBar.setViewVisibility(loginScreenState.progressBarVisibility)
         btnLogin.setViewVisibility(loginScreenState.buttonVisibility)
+        tvError.setViewVisibility(loginScreenState.errorVisibility)
     }
     
 }

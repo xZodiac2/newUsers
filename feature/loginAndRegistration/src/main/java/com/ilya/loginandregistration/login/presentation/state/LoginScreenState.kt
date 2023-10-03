@@ -7,4 +7,5 @@ data class LoginScreenState(
     val loginError: LoginPresentationError? = null,
     val buttonVisibility: ViewVisibility = ViewVisibility.VISIBLE,
     val progressBarVisibility: ViewVisibility = ViewVisibility.GONE,
+    val errorVisibility: ViewVisibility = ViewVisibility.GONE,
 )

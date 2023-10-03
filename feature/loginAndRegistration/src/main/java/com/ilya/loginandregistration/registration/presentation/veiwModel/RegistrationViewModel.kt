@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.computedMD5Hash
+import com.ilya.core.enums.LoadingState
 import com.ilya.core.enums.ViewVisibility
 import com.ilya.loginandregistration.registration.domain.error.ErrorList
 import com.ilya.loginandregistration.registration.domain.error.RegistrationDomainError
@@ -24,7 +25,6 @@ import com.ilya.loginandregistration.registration.presentation.models.InputField
 import com.ilya.loginandregistration.registration.presentation.models.ValidationResult
 import com.ilya.loginandregistration.registration.presentation.navigation.RegistrationFragmentRouter
 import com.ilya.loginandregistration.registration.presentation.state.RegistrationScreenState
-import com.ilya.loginandregistration.registration.presentation.state.RegistrationWaitingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -59,16 +59,16 @@ class RegistrationViewModel @Inject constructor(
                     inputFieldValues.password.computedMD5Hash()
                 )
                 
-                toggleViewVisibilityByWaitingState(RegistrationWaitingState.WaitingForResponse)
+                toggleViewVisibilityByLoadingState(LoadingState.LOADING)
                 
                 registerUser(newUserData)
                     .onSuccess {
-                        _userRegistrationStatusSharedFlow.emit(true)
+                        _userRegistrationStatusSharedFlow.emit(SUCCESSFULLY)
                         registrationFragmentRouter.backToLogin()
+                        toggleViewVisibilityByLoadingState(LoadingState.DONE)
                     }
                     .onFailure { (it as RegistrationDomainError).react(validationResult) }
                 
-                toggleViewVisibilityByWaitingState(RegistrationWaitingState.WaitingForUser)
                 
             } else {
                 _screenStateFlow.value = _screenStateFlow.value.copy(validationResult = validationResult)
@@ -84,33 +84,49 @@ class RegistrationViewModel @Inject constructor(
                         login = listOf(RegistrationPresentationError.LoginAlreadyUsed)
                     )
                 )
-                _userRegistrationStatusSharedFlow.emit(false)
+                _userRegistrationStatusSharedFlow.emit(UNSUCCESSFUL)
             }
             
             is RegistrationDomainError.IllegalRegistrationArgument -> {
                 Log.d("msg", "Expected argument with type NewUserData")
-                _userRegistrationStatusSharedFlow.emit(false)
+                toggleViewVisibilityByLoadingState(LoadingState.ERROR)
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    registrationError = RegistrationPresentationError.SomethingWentWrong
+                )
+                _userRegistrationStatusSharedFlow.emit(UNSUCCESSFUL)
             }
             
             is RegistrationDomainError.UnknownError -> {
-                _screenStateFlow.value =
-                    _screenStateFlow.value.copy(registrationError = RegistrationPresentationError.UnknownError)
-                _userRegistrationStatusSharedFlow.emit(false)
+                toggleViewVisibilityByLoadingState(LoadingState.ERROR)
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    registrationError = RegistrationPresentationError.UnknownError
+                )
+                _userRegistrationStatusSharedFlow.emit(UNSUCCESSFUL)
             }
         }
     }
     
-    private fun toggleViewVisibilityByWaitingState(waitingState: RegistrationWaitingState) {
-        when (waitingState) {
-            is RegistrationWaitingState.WaitingForResponse -> {
+    private fun toggleViewVisibilityByLoadingState(loadingState: LoadingState) {
+        when (loadingState) {
+            LoadingState.LOADING -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
                     buttonVisibility = ViewVisibility.GONE,
-                    progressBarVisibility = ViewVisibility.VISIBLE
+                    progressBarVisibility = ViewVisibility.VISIBLE,
+                    errorVisibility = ViewVisibility.GONE
                 )
             }
             
-            is RegistrationWaitingState.WaitingForUser -> {
+            LoadingState.DONE -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
+                    buttonVisibility = ViewVisibility.VISIBLE,
+                    progressBarVisibility = ViewVisibility.GONE,
+                    errorVisibility = ViewVisibility.GONE
+                )
+            }
+            
+            LoadingState.ERROR -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    errorVisibility = ViewVisibility.VISIBLE,
                     buttonVisibility = ViewVisibility.VISIBLE,
                     progressBarVisibility = ViewVisibility.GONE
                 )
@@ -124,7 +140,6 @@ class RegistrationViewModel @Inject constructor(
     
     private fun inputFieldsIsCorrect(validationResult: ValidationResult): Boolean {
         return validationResult.name == null && validationResult.login == null && validationResult.password == null && validationResult.repeatedPassword == null
-        
     }
     
     private suspend fun getValidationResult(inputFieldsValues: InputFieldValues): ValidationResult =
@@ -173,6 +188,8 @@ class RegistrationViewModel @Inject constructor(
     companion object {
         const val NECESSARY_LOGIN_LENGTH = 3
         const val NECESSARY_PASSWORD_LENGTH = 8
+        private const val UNSUCCESSFUL = false
+        private const val SUCCESSFULLY = true
     }
     
 }

@@ -11,5 +11,6 @@ data class RegistrationScreenState(
     val registrationError: RegistrationPresentationError? = null,
     val buttonVisibility: ViewVisibility = ViewVisibility.VISIBLE,
     val progressBarVisibility: ViewVisibility = ViewVisibility.GONE,
+    val errorVisibility: ViewVisibility = ViewVisibility.GONE,
     @StringRes val toastMessageOnSuccessfulRegister: Int = R.string.text_registration_user_added_successfully,
 )
