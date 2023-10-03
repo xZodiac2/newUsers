@@ -40,13 +40,13 @@ class LoginViewModel @Inject constructor(
                     loginFragmentRouter.goToGreeting(it.login)
                     toggleViewVisibilityByLoadingState(LoadingState.DONE)
                 }
-                .onFailure { (it as LoginDomainError).react() }
+                .onFailure { (it as LoginDomainError).onError() }
             
             
         }
     }
     
-    private fun LoginDomainError.react() {
+    private fun LoginDomainError.onError() {
         toggleViewVisibilityByLoadingState(LoadingState.ERROR)
         changeErrorInState(this.mapToPresentationError())
     }

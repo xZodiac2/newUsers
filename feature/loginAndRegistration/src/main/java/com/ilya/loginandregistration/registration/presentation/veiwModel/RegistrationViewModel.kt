@@ -67,7 +67,7 @@ class RegistrationViewModel @Inject constructor(
                         registrationFragmentRouter.backToLogin()
                         toggleViewVisibilityByLoadingState(LoadingState.DONE)
                     }
-                    .onFailure { (it as RegistrationDomainError).react(validationResult) }
+                    .onFailure { (it as RegistrationDomainError).onError(validationResult) }
                 
                 
             } else {
@@ -76,7 +76,7 @@ class RegistrationViewModel @Inject constructor(
         }
     }
     
-    private suspend fun RegistrationDomainError.react(validationResult: ValidationResult) {
+    private suspend fun RegistrationDomainError.onError(validationResult: ValidationResult) {
         when (this) {
             is RegistrationDomainError.LoginAlreadyUsed -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
