@@ -40,18 +40,19 @@ class LoginViewModel @Inject constructor(
                     loginFragmentRouter.goToGreeting(it.login)
                     toggleViewVisibilityByLoadingState(LoadingState.DONE)
                 }
-                .onFailure { (it as LoginDomainError).onError() }
-            
+                .onFailure { onError(it as LoginDomainError) }
             
         }
     }
     
-    private fun LoginDomainError.onError() {
-        toggleViewVisibilityByLoadingState(LoadingState.ERROR)
-        changeErrorInState(this.mapToPresentationError())
+    private fun onError(error: LoginDomainError) {
+        toggleViewVisibilityByLoadingState(LoadingState.ERROR, error.mapToPresentationError())
     }
     
-    private fun toggleViewVisibilityByLoadingState(loadingState: LoadingState) {
+    private fun toggleViewVisibilityByLoadingState(
+        loadingState: LoadingState,
+        errorToShow: LoginPresentationError? = null,
+    ) {
         when (loadingState) {
             LoadingState.LOADING -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
@@ -73,7 +74,8 @@ class LoginViewModel @Inject constructor(
                 _screenStateFlow.value = _screenStateFlow.value.copy(
                     errorVisibility = ViewVisibility.VISIBLE,
                     buttonVisibility = ViewVisibility.VISIBLE,
-                    progressBarVisibility = ViewVisibility.GONE
+                    progressBarVisibility = ViewVisibility.GONE,
+                    loginError = errorToShow
                 )
             }
         }
@@ -85,10 +87,6 @@ class LoginViewModel @Inject constructor(
             is LoginDomainError.WrongLoginOrPassword -> LoginPresentationError.WrongLoginOrPassword
             is LoginDomainError.WrongLoginArgument -> LoginPresentationError.SomethingWentWrong
         }
-    }
-    
-    private fun changeErrorInState(error: LoginPresentationError) {
-        _screenStateFlow.value = _screenStateFlow.value.copy(loginError = error)
     }
     
     private suspend fun findUser(loginParams: UserLoginParams): Result<LoggedInUserData> = withContext(Dispatchers.IO) {

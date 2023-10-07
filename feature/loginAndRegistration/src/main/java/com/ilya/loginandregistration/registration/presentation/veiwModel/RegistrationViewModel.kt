@@ -67,7 +67,7 @@ class RegistrationViewModel @Inject constructor(
                         registrationFragmentRouter.backToLogin()
                         toggleViewVisibilityByLoadingState(LoadingState.DONE)
                     }
-                    .onFailure { (it as RegistrationDomainError).onError(validationResult) }
+                    .onFailure { onError(it as RegistrationDomainError, validationResult) }
                 
                 
             } else {
@@ -76,8 +76,8 @@ class RegistrationViewModel @Inject constructor(
         }
     }
     
-    private suspend fun RegistrationDomainError.onError(validationResult: ValidationResult) {
-        when (this) {
+    private suspend fun onError(error: RegistrationDomainError, validationResult: ValidationResult) {
+        when (error) {
             is RegistrationDomainError.LoginAlreadyUsed -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
                     validationResult = validationResult.copy(
@@ -89,24 +89,21 @@ class RegistrationViewModel @Inject constructor(
             
             is RegistrationDomainError.IllegalRegistrationArgument -> {
                 Log.d("msg", "Expected argument with type NewUserData")
-                toggleViewVisibilityByLoadingState(LoadingState.ERROR)
-                _screenStateFlow.value = _screenStateFlow.value.copy(
-                    registrationError = RegistrationPresentationError.SomethingWentWrong
-                )
+                toggleViewVisibilityByLoadingState(LoadingState.ERROR, RegistrationPresentationError.SomethingWentWrong)
                 _userRegistrationStatusSharedFlow.emit(UNSUCCESSFUL)
             }
             
             is RegistrationDomainError.UnknownError -> {
-                toggleViewVisibilityByLoadingState(LoadingState.ERROR)
-                _screenStateFlow.value = _screenStateFlow.value.copy(
-                    registrationError = RegistrationPresentationError.UnknownError
-                )
+                toggleViewVisibilityByLoadingState(LoadingState.ERROR, RegistrationPresentationError.UnknownError)
                 _userRegistrationStatusSharedFlow.emit(UNSUCCESSFUL)
             }
         }
     }
     
-    private fun toggleViewVisibilityByLoadingState(loadingState: LoadingState) {
+    private fun toggleViewVisibilityByLoadingState(
+        loadingState: LoadingState,
+        errorToShow: RegistrationPresentationError? = null,
+    ) {
         when (loadingState) {
             LoadingState.LOADING -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
@@ -128,7 +125,8 @@ class RegistrationViewModel @Inject constructor(
                 _screenStateFlow.value = _screenStateFlow.value.copy(
                     errorVisibility = ViewVisibility.VISIBLE,
                     buttonVisibility = ViewVisibility.VISIBLE,
-                    progressBarVisibility = ViewVisibility.GONE
+                    progressBarVisibility = ViewVisibility.GONE,
+                    registrationError = errorToShow
                 )
             }
         }

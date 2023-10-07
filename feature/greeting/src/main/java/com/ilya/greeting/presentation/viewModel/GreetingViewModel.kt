@@ -56,7 +56,6 @@ class GreetingViewModel @Inject constructor(
                     toggleViewVisibilityByLoadingState(LoadingState.DONE)
                 }
                 .onFailure {
-                    toggleViewVisibilityByLoadingState(LoadingState.ERROR)
                     backToLogin()
                 }
             
