@@ -48,16 +48,8 @@ class GreetingViewModel @Inject constructor(
             toggleViewVisibilityByLoadingState(LoadingState.LOADING)
             
             findUser(userLogin)
-                .onSuccess {
-                    _screenStateFlow.value = state.copy(
-                        user = it,
-                        greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(it.name))
-                    )
-                    toggleViewVisibilityByLoadingState(LoadingState.DONE)
-                }
-                .onFailure {
-                    backToLogin()
-                }
+                .onSuccess { toggleViewVisibilityByLoadingState(LoadingState.DONE, it) }
+                .onFailure { backToLogin() }
             
             
         } else {
@@ -70,7 +62,10 @@ class GreetingViewModel @Inject constructor(
         }
     }
     
-    private fun toggleViewVisibilityByLoadingState(loadingState: LoadingState) {
+    private fun toggleViewVisibilityByLoadingState(
+        loadingState: LoadingState,
+        userDataToShow: GreetingUserData? = null,
+    ) {
         when (loadingState) {
             LoadingState.LOADING -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
@@ -82,7 +77,12 @@ class GreetingViewModel @Inject constructor(
             LoadingState.DONE -> {
                 _screenStateFlow.value = _screenStateFlow.value.copy(
                     userNameVisibility = ViewVisibility.VISIBLE,
-                    progressBarVisibility = ViewVisibility.GONE
+                    progressBarVisibility = ViewVisibility.GONE,
+                    user = userDataToShow,
+                    greetingTextReference = TextReference.Resource(
+                        R.string.text_greeting,
+                        listOf(userDataToShow?.name).map { it ?: backToLogin() }
+                    )
                 )
             }
             
