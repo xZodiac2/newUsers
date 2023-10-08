@@ -65,7 +65,6 @@ class RegistrationViewModel @Inject constructor(
                     .onSuccess {
                         _userRegistrationStatusSharedFlow.emit(SUCCESSFULLY)
                         registrationFragmentRouter.backToLogin()
-                        toggleViewVisibilityByLoadingState(LoadingState.DONE)
                     }
                     .onFailure { onError(it as RegistrationDomainError, validationResult) }
                 
