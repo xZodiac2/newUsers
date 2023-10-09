@@ -53,12 +53,7 @@ class GreetingViewModel @Inject constructor(
             
             
         } else {
-            _screenStateFlow.value = state.copy(
-                greetingTextReference = TextReference.Resource(
-                    R.string.text_greeting,
-                    listOf(state.user.name)
-                )
-            )
+            toggleViewVisibilityByLoadingState(LoadingState.DONE, state.user)
         }
     }
     

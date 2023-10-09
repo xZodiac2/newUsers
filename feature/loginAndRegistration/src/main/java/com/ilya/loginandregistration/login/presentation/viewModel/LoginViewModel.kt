@@ -36,18 +36,17 @@ class LoginViewModel @Inject constructor(
             toggleViewVisibilityByLoadingState(LoadingState.LOADING)
             
             findUser(loginParams)
-                .onSuccess {
-                    loginFragmentRouter.goToGreeting(it.login)
-                    toggleViewVisibilityByLoadingState(LoadingState.DONE)
+                .onSuccess { loginFragmentRouter.goToGreeting(it.login) }
+                .onFailure {
+                    toggleViewVisibilityByLoadingState(
+                        LoadingState.ERROR,
+                        (it as LoginDomainError).mapToPresentationError()
+                    )
                 }
-                .onFailure { onError(it as LoginDomainError) }
             
         }
     }
     
-    private fun onError(error: LoginDomainError) {
-        toggleViewVisibilityByLoadingState(LoadingState.ERROR, error.mapToPresentationError())
-    }
     
     private fun toggleViewVisibilityByLoadingState(
         loadingState: LoadingState,
