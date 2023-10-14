@@ -1,20 +1,21 @@
 package com.ilya.greeting.presentation.viewModel
 
 import android.os.Bundle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ilya.core.TextReference
+import com.ilya.core.enums.LoadingState
 import com.ilya.core.enums.ViewVisibility
 import com.ilya.greeting.R
 import com.ilya.greeting.domain.models.GreetingUserData
 import com.ilya.greeting.domain.useCases.FindUserUseCase
 import com.ilya.greeting.presentation.callback.GreetingViewCallback
 import com.ilya.greeting.presentation.navigation.GreetingFragmentRouter
-import com.ilya.greeting.presentation.state.GreetingViewState
+import com.ilya.greeting.presentation.state.GreetingScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -25,8 +26,8 @@ class GreetingViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
 ) : ViewModel(), GreetingViewCallback {
     
-    private val _stateLiveData: MutableLiveData<GreetingViewState> = MutableLiveData()
-    val stateLiveData: LiveData<GreetingViewState> = _stateLiveData
+    private val _screenStateFlow = MutableStateFlow(GreetingScreenState())
+    val screenStateFlow = _screenStateFlow.asStateFlow()
     
     lateinit var greetingFragmentRouter: GreetingFragmentRouter
     
@@ -35,7 +36,7 @@ class GreetingViewModel @Inject constructor(
     }
     
     fun getUser(args: Bundle) = viewModelScope.launch {
-        val state = getOrCreateState()
+        val state = _screenStateFlow.value
         val userLogin = args.getString(KEY_USER_LOGIN)
         
         if (userLogin == null) {
@@ -44,46 +45,53 @@ class GreetingViewModel @Inject constructor(
         }
         
         if (state.user == null) {
-            _stateLiveData.value = state.copy(
-                userNameVisibility = ViewVisibility.GONE,
-                progressBarVisibility = ViewVisibility.VISIBLE
-            )
+            toggleViewVisibilityByLoadingState(LoadingState.LOADING)
             
             findUser(userLogin)
-                .onSuccess {
-                    _stateLiveData.value = state.copy(
-                        user = it,
-                        greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf(it.name))
-                    )
-                    
-                }
+                .onSuccess { toggleViewVisibilityByLoadingState(LoadingState.DONE, it) }
                 .onFailure { backToLogin() }
+            
+            
         } else {
-            _stateLiveData.value = state.copy(
-                greetingTextReference = TextReference.Resource(
-                    R.string.text_greeting,
-                    listOf(state.user.name)
-                )
-            )
+            toggleViewVisibilityByLoadingState(LoadingState.DONE, state.user)
         }
-        
-        
-        _stateLiveData.value = getOrCreateState().copy(
-            userNameVisibility = ViewVisibility.VISIBLE,
-            progressBarVisibility = ViewVisibility.GONE
-        )
+    }
+    
+    private fun toggleViewVisibilityByLoadingState(
+        loadingState: LoadingState,
+        userDataToShow: GreetingUserData? = null,
+    ) {
+        when (loadingState) {
+            LoadingState.LOADING -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    userNameVisibility = ViewVisibility.GONE,
+                    progressBarVisibility = ViewVisibility.VISIBLE
+                )
+            }
+            
+            LoadingState.DONE -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    userNameVisibility = ViewVisibility.VISIBLE,
+                    progressBarVisibility = ViewVisibility.GONE,
+                    user = userDataToShow,
+                    greetingTextReference = TextReference.Resource(
+                        R.string.text_greeting,
+                        listOf(userDataToShow?.name).map { it ?: backToLogin() }
+                    )
+                )
+            }
+            
+            LoadingState.ERROR -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    userNameVisibility = ViewVisibility.GONE,
+                    progressBarVisibility = ViewVisibility.GONE
+                )
+            }
+        }
     }
     
     private suspend fun findUser(userLogin: String): Result<GreetingUserData> = withContext(Dispatchers.IO) {
         return@withContext findUserUseCase.execute(userLogin)
-    }
-    
-    private fun getOrCreateState(): GreetingViewState {
-        return stateLiveData.value ?: GreetingViewState(
-            greetingTextReference = TextReference.Resource(R.string.text_greeting, listOf("")),
-            userNameVisibility = ViewVisibility.GONE,
-            progressBarVisibility = ViewVisibility.VISIBLE
-        )
     }
     
     private fun backToLogin() {

@@ -14,15 +14,20 @@ fun String.computedMD5Hash(): String {
 fun ByteArray.toHexString(): String = joinToString("") { "%02x".format(it) }
 
 fun Context.getStringByReference(textReference: TextReference): String {
-    return when(textReference) {
+    return when (textReference) {
         is TextReference.Resource -> getString(textReference.stringId, *textReference.formatArgs.toTypedArray())
-        is TextReference.PluralResource -> resources.getQuantityString(textReference.id, textReference.count, *textReference.formatArgs.toTypedArray())
+        is TextReference.PluralResource -> resources.getQuantityString(
+            textReference.id,
+            textReference.count,
+            *textReference.formatArgs.toTypedArray()
+        )
+        
         is TextReference.Str -> textReference.value
     }
 }
 
 fun TextView.setTextByReference(textReference: TextReference?) {
-    text = if (textReference == null) null else context.getStringByReference(textReference)
+    text = textReference?.let { context.getStringByReference(it) }
 }
 
 fun View.setViewVisibility(visibility: ViewVisibility) {

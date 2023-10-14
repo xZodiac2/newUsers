@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.ilya.loginandregistration.databinding.FragmentLoginBinding
 import com.ilya.loginandregistration.login.presentation.navigation.LoginFragmentRouter
 import com.ilya.loginandregistration.login.presentation.view.LoginView
@@ -22,7 +23,8 @@ class LoginFragment : Fragment() {
     
     private val loginViewModel: LoginViewModel by viewModels()
     
-    @Inject lateinit var loginFragmentRouter: LoginFragmentRouter
+    @Inject
+    lateinit var loginFragmentRouter: LoginFragmentRouter
     
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -33,7 +35,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         view = LoginView(binding, loginViewModel)
-        loginViewModel.stateLiveData.observe(viewLifecycleOwner, view::bind)
+        lifecycleScope.launchWhenStarted { loginViewModel.screenStateFlow.collect(view::bind) }
         return binding.root
     }
     

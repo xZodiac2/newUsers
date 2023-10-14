@@ -7,7 +7,7 @@ import com.ilya.core.setViewVisibility
 import com.ilya.loginandregistration.databinding.FragmentLoginBinding
 import com.ilya.loginandregistration.login.domain.models.UserLoginParams
 import com.ilya.loginandregistration.login.presentation.callback.LoginViewCallback
-import com.ilya.loginandregistration.login.presentation.state.LoginViewState
+import com.ilya.loginandregistration.login.presentation.state.LoginScreenState
 
 class LoginView(
     private val binding: FragmentLoginBinding,
@@ -33,13 +33,12 @@ class LoginView(
         etPassword.doOnTextChanged { _, _, _, _ -> callback.onInputFieldsChanged() }
     }
     
-    fun bind(loginViewState: LoginViewState?) = with(binding) {
-        loginViewState ?: return
+    fun bind(loginScreenState: LoginScreenState) = with(binding) {
+        tvError.setTextByReference(loginScreenState.loginError?.textReference)
         
-        tvError.setTextByReference(loginViewState.loginError?.textReference)
-        
-        progressBar.setViewVisibility(loginViewState.progressBarVisibility)
-        btnLogin.setViewVisibility(loginViewState.buttonVisibility)
+        progressBar.setViewVisibility(loginScreenState.progressBarVisibility)
+        btnLogin.setViewVisibility(loginScreenState.buttonVisibility)
+        tvError.setViewVisibility(loginScreenState.errorVisibility)
     }
     
 }

@@ -14,7 +14,6 @@ import com.ilya.loginandregistration.registration.presentation.veiwModel.Registr
 import com.ilya.loginandregistration.registration.presentation.view.RegistrationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,8 +36,8 @@ class RegistrationFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false)
         view = RegistrationView(binding, registrationViewModel)
-        registrationViewModel.stateLiveData.observe(viewLifecycleOwner, view::bind)
-        lifecycleScope.launch { registrationViewModel.userRegistrationStatus.collectLatest(view::bindRegistrationStatus) }
+        lifecycleScope.launchWhenStarted { registrationViewModel.screenStateFlow.collect(view::bindScreenState) }
+        lifecycleScope.launchWhenStarted { registrationViewModel.userRegistrationStatusSharedFlow.collectLatest(view::bindRegistrationStatus) }
         return binding.root
     }
     

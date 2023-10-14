@@ -1,10 +1,8 @@
 package com.ilya.loginandregistration.login.presentation.viewModel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ilya.core.enums.LoadingState
 import com.ilya.core.enums.ViewVisibility
 import com.ilya.loginandregistration.login.domain.error.LoginDomainError
 import com.ilya.loginandregistration.login.domain.models.LoggedInUserData
@@ -13,9 +11,11 @@ import com.ilya.loginandregistration.login.domain.useCases.FindUserUseCase
 import com.ilya.loginandregistration.login.presentation.callback.LoginViewCallback
 import com.ilya.loginandregistration.login.presentation.error.LoginPresentationError
 import com.ilya.loginandregistration.login.presentation.navigation.LoginFragmentRouter
-import com.ilya.loginandregistration.login.presentation.state.LoginViewState
+import com.ilya.loginandregistration.login.presentation.state.LoginScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,46 +26,65 @@ class LoginViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
 ) : ViewModel(), LoginViewCallback {
     
-    private val _stateLiveData: MutableLiveData<LoginViewState> = MutableLiveData()
-    val stateLiveData: LiveData<LoginViewState> = _stateLiveData
+    private val _screenStateFlow = MutableStateFlow(LoginScreenState())
+    val screenStateFlow = _screenStateFlow.asStateFlow()
     
     lateinit var loginFragmentRouter: LoginFragmentRouter
     
     override fun onLoginClick(loginParams: UserLoginParams) {
         viewModelScope.launch {
-            _stateLiveData.value = getOrCreateState().copy(
-                buttonVisibility = ViewVisibility.GONE,
-                progressBarVisibility = ViewVisibility.VISIBLE
-            )
+            toggleViewVisibilityByLoadingState(LoadingState.LOADING)
             
             findUser(loginParams)
                 .onSuccess { loginFragmentRouter.goToGreeting(it.login) }
-                .onFailure { error ->
-                    error as LoginDomainError
-                    
-                    when (error) {
-                        is LoginDomainError.WrongLoginOrPassword -> {
-                            _stateLiveData.value =
-                                getOrCreateState().copy(loginError = LoginPresentationError.WrongLoginOrPasswordError)
-                        }
-                        
-                        is LoginDomainError.UnknownError -> {
-                            _stateLiveData.value =
-                                getOrCreateState().copy(loginError = LoginPresentationError.UnknownError)
-                        }
-                        
-                        is LoginDomainError.WrongLoginArgument -> {
-                            _stateLiveData.value =
-                                getOrCreateState().copy(loginError = LoginPresentationError.SomethingWentWrong)
-                            Log.e("msg", "Expected argument with type UserLoginParams")
-                        }
-                    }
+                .onFailure {
+                    toggleViewVisibilityByLoadingState(
+                        LoadingState.ERROR,
+                        (it as LoginDomainError).mapToPresentationError()
+                    )
                 }
             
-            _stateLiveData.value = getOrCreateState().copy(
-                buttonVisibility = ViewVisibility.VISIBLE,
-                progressBarVisibility = ViewVisibility.GONE
-            )
+        }
+    }
+    
+    
+    private fun toggleViewVisibilityByLoadingState(
+        loadingState: LoadingState,
+        errorToShow: LoginPresentationError? = null,
+    ) {
+        when (loadingState) {
+            LoadingState.LOADING -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    buttonVisibility = ViewVisibility.GONE,
+                    progressBarVisibility = ViewVisibility.VISIBLE,
+                    errorVisibility = ViewVisibility.GONE
+                )
+            }
+            
+            LoadingState.DONE -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    buttonVisibility = ViewVisibility.VISIBLE,
+                    progressBarVisibility = ViewVisibility.GONE,
+                    errorVisibility = ViewVisibility.GONE
+                )
+            }
+            
+            LoadingState.ERROR -> {
+                _screenStateFlow.value = _screenStateFlow.value.copy(
+                    errorVisibility = ViewVisibility.VISIBLE,
+                    buttonVisibility = ViewVisibility.VISIBLE,
+                    progressBarVisibility = ViewVisibility.GONE,
+                    loginError = errorToShow
+                )
+            }
+        }
+    }
+    
+    private fun LoginDomainError.mapToPresentationError(): LoginPresentationError {
+        return when (this) {
+            is LoginDomainError.UnknownError -> LoginPresentationError.UnknownError
+            is LoginDomainError.WrongLoginOrPassword -> LoginPresentationError.WrongLoginOrPassword
+            is LoginDomainError.WrongLoginArgument -> LoginPresentationError.SomethingWentWrong
         }
     }
     
@@ -73,20 +92,12 @@ class LoginViewModel @Inject constructor(
         return@withContext findUserUseCase.execute(loginParams)
     }
     
-    private fun getOrCreateState(): LoginViewState {
-        return _stateLiveData.value ?: LoginViewState(
-            loginError = null,
-            buttonVisibility = ViewVisibility.VISIBLE,
-            progressBarVisibility = ViewVisibility.GONE
-        )
-    }
-    
     override fun onOfferToRegisterClick() {
         loginFragmentRouter.goToRegistration()
     }
     
     override fun onInputFieldsChanged() {
-        _stateLiveData.value = getOrCreateState().copy(loginError = null)
+        _screenStateFlow.value = _screenStateFlow.value.copy(loginError = null)
     }
     
 }
